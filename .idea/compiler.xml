@@ -8,23 +8,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="advertisement" />
         <module name="recommend" />
-<<<<<<< HEAD
-=======
         <module name="common" />
->>>>>>> 7aa0eeeaee3d7e589ad3b98929d9237a0f040aae
-        <module name="account" />
         <module name="interface-api" />
+        <module name="account" />
         <module name="book" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="account" target="1.8" />
-      <module name="advertisement" target="1.8" />
-      <module name="book" target="1.8" />
-      <module name="interface-api" target="1.8" />
-      <module name="orange" target="1.8" />
-      <module name="recommend" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -33,7 +22,6 @@
       <module name="book" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="interface-api" options="-parameters" />
-      <module name="orange" options="-parameters" />
       <module name="recommend" options="-parameters" />
     </option>
   </component>
