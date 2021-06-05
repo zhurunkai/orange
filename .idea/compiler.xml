@@ -8,6 +8,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="advertisement" />
         <module name="recommend" />
+<<<<<<< HEAD
+=======
+        <module name="common" />
+>>>>>>> 7aa0eeeaee3d7e589ad3b98929d9237a0f040aae
         <module name="account" />
         <module name="interface-api" />
         <module name="book" />
@@ -27,6 +31,7 @@
       <module name="account" options="-parameters" />
       <module name="advertisement" options="-parameters" />
       <module name="book" options="-parameters" />
+      <module name="common" options="-parameters" />
       <module name="interface-api" options="-parameters" />
       <module name="orange" options="-parameters" />
       <module name="recommend" options="-parameters" />
