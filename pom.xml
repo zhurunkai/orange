@@ -89,4 +89,11 @@
       </plugins>
     </pluginManagement>
   </build>
+  <modules>
+    <module>account</module>
+    <module>advertisement</module>
+    <module>book</module>
+    <module>interface-api</module>
+    <module>recommend</module>
+  </modules>
 </project>
