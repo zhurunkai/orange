@@ -7,16 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="orange" />
-        <module name="advertisement" />
         <module name="recommend" />
+        <module name="book" />
         <module name="account" />
         <module name="interface-api" />
-        <module name="book" />
+        <module name="advertisement" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="book" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -24,6 +21,7 @@
       <module name="advertisement" options="-parameters" />
       <module name="book" options="-parameters" />
       <module name="interface-api" options="-parameters" />
+      <module name="orange" options="-parameters" />
       <module name="recommend" options="-parameters" />
     </option>
   </component>
