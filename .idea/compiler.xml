@@ -6,28 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-<<<<<<< HEAD
-=======
         <module name="advertisement" />
         <module name="recommend" />
->>>>>>> 4282af2d5e3b3130cd2d3dbdd347a7da48d880f0
+        <module name="common" />
         <module name="interface-api" />
         <module name="account" />
         <module name="book" />
-        <module name="advertisement" />
-        <module name="recommend" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-<<<<<<< HEAD
       <module name="account" target="1.8" />
       <module name="advertisement" target="1.8" />
       <module name="book" target="1.8" />
-      <module name="interface-api" target="1.8" />
-      <module name="recommend" target="1.8" />
-=======
       <module name="common" target="1.8" />
->>>>>>> 4282af2d5e3b3130cd2d3dbdd347a7da48d880f0
+      <module name="interface-api" target="1.8" />
+      <module name="orange" target="1.8" />
+      <module name="recommend" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -35,6 +29,7 @@
       <module name="account" options="-parameters" />
       <module name="advertisement" options="-parameters" />
       <module name="book" options="-parameters" />
+      <module name="common" options="-parameters" />
       <module name="interface-api" options="-parameters" />
       <module name="recommend" options="-parameters" />
     </option>

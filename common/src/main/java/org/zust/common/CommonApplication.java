@@ -1,14 +1,14 @@
-package org.zust.interfaceapi;
+package org.zust.common;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude= {DataSourceAutoConfiguration.class})
-public class InterfaceApiApplication {
+public class CommonApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(InterfaceApiApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(CommonApplication.class, args);
+	}
 
 }
