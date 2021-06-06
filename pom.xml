@@ -95,6 +95,5 @@
     <module>book</module>
     <module>interface-api</module>
     <module>recommend</module>
-    <module>common</module>
   </modules>
 </project>

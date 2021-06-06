@@ -8,12 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="advertisement" />
         <module name="recommend" />
-        <module name="common" />
         <module name="interface-api" />
         <module name="account" />
         <module name="book" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
