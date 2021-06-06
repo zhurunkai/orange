@@ -1,4 +1,4 @@
-package org.zust.common.utils;
+package org.zust.interfaceapi.utils;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -27,16 +27,16 @@ public class Upload {
     private static COSClient cosClient = new COSClient(cred, clientConfig);
 
 
-        public static String fileQcloud(File file,String fileName) {
-            // 指定文件上传到 COS 上的路径，即对象键。例如对象键为folder/picture.jpg，则表示将文件 picture.jpg 上传到 folder 路径下
-            String key = fileName;
-            try{
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file);
-                PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
-                return "200";
-            }catch (Exception e){
-                e.printStackTrace();
-                return "500";
-            }
+    public static String fileQcloud(File file,String fileName) {
+        // 指定文件上传到 COS 上的路径，即对象键。例如对象键为folder/picture.jpg，则表示将文件 picture.jpg 上传到 folder 路径下
+        String key = fileName;
+        try{
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file);
+            PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
+            return "200";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "500";
         }
+    }
 }

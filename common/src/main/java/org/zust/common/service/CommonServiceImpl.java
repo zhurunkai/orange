@@ -3,8 +3,9 @@ package org.zust.common.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.zust.common.utils.Upload;
+
 import org.zust.interfaceapi.service.CommonService;
+import org.zust.interfaceapi.utils.Upload;
 
 import java.io.File;
 import java.io.IOException;
