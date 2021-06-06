@@ -4,10 +4,11 @@ import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
-import com.qcloud.cos.exception.CosClientException;
-import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.model.*;
 import com.qcloud.cos.region.Region;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Upload {
     private static final String bucketName = "orange-1258976754";
@@ -23,9 +24,19 @@ public class Upload {
     // 2 设置bucket的区域, COS地域的简称请参照
     // https://cloud.tencent.com/document/product/436/6224，根据自己创建的存储桶选择地区
     private static ClientConfig clientConfig = new ClientConfig(new Region("ap-shanghai"));
+    private static COSClient cosClient = new COSClient(cred, clientConfig);
 
 
-//        public fileUplo(filepath) {
-//            fdajkjk
-//        }
+        public static String fileQcloud(File file,String fileName) {
+            // 指定文件上传到 COS 上的路径，即对象键。例如对象键为folder/picture.jpg，则表示将文件 picture.jpg 上传到 folder 路径下
+            String key = fileName;
+            try{
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file);
+                PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
+                return "200";
+            }catch (Exception e){
+                e.printStackTrace();
+                return "500";
+            }
+        }
 }

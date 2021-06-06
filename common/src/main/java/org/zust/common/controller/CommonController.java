@@ -8,7 +8,7 @@ import org.zust.interfaceapi.service.CommonService;
 
 
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/")
 public class CommonController {
     @Autowired
     CommonService commonService;
