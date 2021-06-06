@@ -22,7 +22,7 @@ public class BookUserEntity {
     @Column(name="age")
     private Integer age;
     @Column(name="nickname")
-    private String nickname;
+    private String nickName;
     @Column(name="sex")
     private String sex;
     @Column(name="token")
