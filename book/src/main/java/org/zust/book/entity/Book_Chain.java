@@ -29,6 +29,6 @@ public class Book_Chain {
     @Column(columnDefinition = "varchar comment '书的封面'")
     private String cover;
 
-    
+
 
 }
