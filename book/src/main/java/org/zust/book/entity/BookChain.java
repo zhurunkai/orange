@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-public class Book_Chain {
+public class BookChain {
     @Id
     @Column(columnDefinition = "int(11)")
     private Integer id;

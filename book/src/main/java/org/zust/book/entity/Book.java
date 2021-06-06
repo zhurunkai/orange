@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author: Linxy
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@Table()
 public class Book {
 
     @Id
@@ -31,16 +33,16 @@ public class Book {
     private String cover;
 
 
-    private String epub_url;
+    private String epubUrl;
 
     @Column(columnDefinition = "int comment '0代表正在转换，1代表已转换完成'")
-    private Integer convert_status;
+    private Integer convertStatus;
 
     @Column(columnDefinition = "varchar comment '书所在的url'")
-    private String origin_url;
+    private String originUrl;
 
 
-    private String origin_ext;
+    private String originExt;
 
 
 
