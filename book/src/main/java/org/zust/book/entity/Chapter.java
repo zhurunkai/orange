@@ -3,9 +3,7 @@ package org.zust.book.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 
 /**
@@ -19,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 public class Chapter {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "int(11)")
     private Integer id;
 

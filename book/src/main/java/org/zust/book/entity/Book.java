@@ -3,9 +3,7 @@ package org.zust.book.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @author: Linxy
@@ -15,9 +13,11 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@Table(name = "book")
 public class Book {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "int(11)")
     private Integer id;
 
@@ -30,17 +30,17 @@ public class Book {
     @Column(columnDefinition = "varchar comment '书的封面'")
     private String cover;
 
-
-    private String epub_url;
+    @Column(columnDefinition = "varchar comment '书的epub格式文件地址'")
+    private String epubUrl;
 
     @Column(columnDefinition = "int comment '0代表正在转换，1代表已转换完成'")
-    private Integer convert_status;
+    private Integer convertStatus;
 
-    @Column(columnDefinition = "varchar comment '书所在的url'")
-    private String origin_url;
+    @Column(columnDefinition = "varchar comment '原始格式文件url'")
+    private String originUrl;
 
-
-    private String origin_ext;
+    @Column(columnDefinition = "varchar comment '原始文件格式后缀（如pdf，txt等）'")
+    private String originExt;
 
 
 
