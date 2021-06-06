@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
-@Table(name = "advertisement",schema = "book_cloud")
+@Table(name = "advertisement")
 public class AdvertisementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,13 @@ public class AdvertisementEntity {
     //广告状态
     @Column
     private String status;
-
-
-
+    public AdvertisementEntity(String title,String url,String picture,Integer owner,Double budget,String status) {
+        this.title = title;
+        this.url = url;
+        this.picture = picture;
+        this.owner = owner;
+        this.budget = budget;
+        this.status = status;
+    }
+    public AdvertisementEntity() {}
 }
