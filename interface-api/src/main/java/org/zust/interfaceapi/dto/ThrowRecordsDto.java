@@ -1,12 +1,13 @@
 package org.zust.interfaceapi.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ThrowRecordsDto {
     private Integer id;
     // 投放类型 "点击"或"查看"
