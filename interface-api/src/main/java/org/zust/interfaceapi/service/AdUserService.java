@@ -7,5 +7,10 @@ import java.util.Map;
 
 public interface AdUserService {
 
-    public ResType adidentifyCode (Map param);
+    public ResType findBookUserAllInformById(int buId);
+    public ResType findAdUserBillById(int id);
+
+
+
+
 }

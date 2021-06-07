@@ -24,7 +24,7 @@ public class BookUserServiceImpl implements BookUserService {
 
     //读者登录所用验证码
     @Override
-    public ResType bookidentifyCode(Map param) {
+    public ResType identifyCode(Map param) {
         Map saltdata = IdentifyingCode.execute((String)param.get("phone"));
         if((int)saltdata.get("status") == 0) {
             return new ResType(400,101);

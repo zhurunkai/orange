@@ -16,25 +16,27 @@ public class BookUserController {
     @Autowired
     BookUserService bookUserService;
 
+    //获取验证码（读者广告商通用）
     @PostMapping("/captcha")
-    public ResponseEntity<?> identfyCode(@RequestBody Map params1)
+    public ResponseEntity<?> identfyCode(@RequestBody Map params)
     {
-        ResType res = bookUserService.bookidentifyCode(params1);
+        ResType res = bookUserService.identifyCode(params);
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
     }   
     
-    @PostMapping("/book")
-    public ResponseEntity<?> bookUserLoginRegister(@RequestBody Map params2){
-        ResType res = bookUserService.bookidentifyCode(params2);
-        if(res.getStatus()==200) {
-            return ResponseEntity.ok(res.getData());
-        }
-        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
-    }
+//    @PostMapping("/book")
+//    public ResponseEntity<?> bookUserLoginRegister(@RequestBody Map params){
+//        ResType res = bookUserService.identifyCode(params);
+//        if(res.getStatus()==200) {
+//            return ResponseEntity.ok(res.getData());
+//        }
+//        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+//    }
 
+    //根据id获取读书人信息
     @GetMapping("/book/{id}")
     public ResponseEntity<?>  findBookUserAllById(@PathVariable String id){
         ResType res = bookUserService.findBookUserAllInformById(Integer.parseInt(id));

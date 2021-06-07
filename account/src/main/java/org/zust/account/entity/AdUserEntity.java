@@ -19,7 +19,7 @@ public class AdUserEntity {
     @Column(name="phone")
     private String phone;
     @Column(name="nickname")
-    private String nickName;
+    private String nickname;
     @Column(name="portrait")
     private String portrait;
     @Column(name="freeze")
