@@ -28,7 +28,7 @@ public class AdvertisementController {
       if(res.getStatus()==200) {
           return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(), HttpStatus.valueOf(res.getStatus()));
       }
-      return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+      return new ResponseEntity<Integer>(res.getCode(), HttpStatus.valueOf(res.getStatus()));
   }
 
     @GetMapping("/{id}")
@@ -38,7 +38,7 @@ public class AdvertisementController {
         if (res.getStatus()==200){
             return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(),HttpStatus.valueOf(res.getStatus()));
         }
-        return new ResponseEntity<Integer>(103,HttpStatus.valueOf(res.getStatus()));
+        return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
     }
 
   }

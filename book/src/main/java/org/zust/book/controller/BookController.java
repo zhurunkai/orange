@@ -8,6 +8,7 @@ import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Map;
 
 /**
@@ -17,19 +18,23 @@ import java.util.Map;
  **/
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/book",produces = "application/json;charset=utf-8")
+@RequestMapping("/book")
 public class BookController {
 
     @Autowired
     private BookService bookService;
 
-//    @GetMapping
-//    public ResponseEntity<?> getBook(@RequestBody Map params)
-//    {
-//
-//        if(res.getStatus()==200) {
-//            return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(), HttpStatus.valueOf(res.getStatus()));
-//        }
-//        return new ResponseEntity<String>((String)res.getMsg(), HttpStatus.valueOf(res.getStatus()));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBook(@PathVariable String id)
+    {
+
+        if (id==null)return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("101");
+
+        ResType res = bookService.getBook(Integer.parseInt(id));
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        }else {
+            return ResponseEntity.status(res.getStatus()).body("102");
+        }
+    }
 }

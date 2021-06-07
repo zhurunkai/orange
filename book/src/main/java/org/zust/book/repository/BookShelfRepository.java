@@ -3,6 +3,7 @@ package org.zust.book.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.zust.book.entity.BookShelf;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -12,6 +13,6 @@ import java.util.Optional;
  **/
 public interface BookShelfRepository extends JpaRepository<BookShelf,Integer> {
 
-    BookShelf findBookShelfById(Integer id);
+    ArrayList<BookShelf> findAllByOwner(Integer id);
 
 }

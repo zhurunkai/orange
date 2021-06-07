@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
 import org.zust.interfaceapi.service.BookShelfService;
 import org.zust.interfaceapi.utils.ResType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: Linxy
@@ -14,20 +18,47 @@ import org.zust.interfaceapi.utils.ResType;
  * @function:
  **/
 @RestController
-@RequestMapping(value = "/book/shelf",produces = "application/json;charset=utf-8")
+@RequestMapping("/book/shelf")
 public class BookShelfController {
 
     @Autowired
     private BookShelfService bookShelfService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBookShelfById(@PathVariable Integer id) {
+    public ResponseEntity<?> getBookShelfById(@PathVariable String id) {
 
-        ResType res = bookShelfService.getBookShelfById(id);
-        if(res.getStatus()==200) {
-            return new ResponseEntity<>((BookShelfDto)res.getData(), HttpStatus.valueOf(res.getStatus()));
+        if (id==null)return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("101");
+
+        ResType res = bookShelfService.getBookShelfById(Integer.parseInt(id));
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        }else {
+            return ResponseEntity.status(res.getStatus()).body("102");
         }
-        return new ResponseEntity<>(res.getStatus(), HttpStatus.valueOf(res.getStatus()));
+
     }
+
+    @GetMapping
+    public ResponseEntity<?> getAllBookShelfByOwnerId(@RequestHeader("Authorization") String token){
+
+<<<<<<< HEAD
+        ResType res = bookShelfService.getBookShelfLists(token);
+        return ResponseEntity.ok(res.getData());
+
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addAdvertisement(@RequestBody HashMap map)
+    {
+        ResType res = bookShelfService.addBookShelf(map);
+=======
+        ResType res = bookShelfService.getBookShelfById(id);
+>>>>>>> b35391266d48a37332a3a3c675f06228ac44ce96
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body("102");
+    }
+
 
 }

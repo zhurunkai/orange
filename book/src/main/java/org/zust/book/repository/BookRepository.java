@@ -10,6 +10,4 @@ import org.zust.book.entity.Book;
  **/
 public interface BookRepository extends JpaRepository<Book,Integer> {
 
-    Book findBookById(Integer id);
-
 }
