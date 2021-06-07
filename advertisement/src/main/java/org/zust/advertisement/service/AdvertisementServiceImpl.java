@@ -9,7 +9,10 @@ import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.utils.ResType;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Map;
+
+import static java.lang.Integer.valueOf;
 
 @Service
 public class AdvertisementServiceImpl implements AdvertisementService {
@@ -37,6 +40,17 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(500);
+        }
+    }
+
+    @Override
+    public ResType getAdvertisement(Integer id){
+        try{
+            AdvertisementEntity advertisementEntity = advertisementDao.findById(id).orElse(null);
+            return new ResType(200,e2d(advertisementEntity));
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(400);
         }
     }
 
