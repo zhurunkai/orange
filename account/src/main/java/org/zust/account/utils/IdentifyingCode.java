@@ -34,9 +34,14 @@ public class IdentifyingCode {
         System.out.println(result);
 
         HashMap<String, Object> map = new HashMap<>();
+        if("0".equals(result)) {
+            map.put("salt",salt);
+            map.put("randomCode",randomCode);
+            map.put("status",1);
 
-        map.put("salt",salt);
-        map.put("randomCode",randomCode);
+        } else {
+            map.put("status",0);
+        }
         return map;
     }
 

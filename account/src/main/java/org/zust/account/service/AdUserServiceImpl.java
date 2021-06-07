@@ -20,17 +20,19 @@ public class AdUserServiceImpl implements AdUserService {
     @Override
     public ResType adidentifyCode(Map param) {
         Map saltdata = IdentifyingCode.execute((String)param.get("phone"));
-
+        if((int)saltdata.get("status") == 0) {
+            return new ResType(400,101);
+        }
         String salt = (String)saltdata.get("salt");
         String randomcode =(String) saltdata.get("randomCode");
         String phone = (String) param.get("phone");
 
-        SaltEntity data = new SaltEntity(salt,randomcode,phone);
+        SaltEntity data = new SaltEntity(phone,salt,randomcode);
         System.out.println(data);
         SaltEntity save = saltDao.save(data);
         System.out.println(save);
 
-        return new ResType(200,save);
+        return new ResType(save);
 
 
     }

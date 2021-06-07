@@ -7,14 +7,17 @@ import lombok.Setter;
 @Data
 public class ResType<T> {
     private int status;
+    private int code;
     private T data;
     public ResType() {}
 
-    public ResType(int status) {
+    public ResType(int status, int code) {
         this.status = status;
+        this.code = code;
     }
-    public ResType(int status, T data) {
-        this.status = status;
+
+    public ResType(T data) {
+        this.status = 200;
         this.data = data;
     }
 
