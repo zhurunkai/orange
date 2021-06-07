@@ -3,16 +3,15 @@ package org.zust.interfaceapi.utils;
 import lombok.Data;
 
 @Data
-public class ResType {
+public class ResType<T> {
     private int status;
-    private Object data;
-    public ResType() {
+    private T data;
+    public ResType() {}
 
-    }
     public ResType(int status) {
         this.status = status;
     }
-    public ResType(int status, Object data) {
+    public ResType(int status, T data) {
         this.status = status;
         this.data = data;
     }
