@@ -1,7 +1,12 @@
 package org.zust.interfaceapi.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
+@Data
+@NoArgsConstructor
 public class OperatorRecordsDto {
     private Integer id;
     // 操作类型 "delete"或"add"

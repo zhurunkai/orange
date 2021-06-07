@@ -1,5 +1,10 @@
 package org.zust.interfaceapi.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class TabWeightDto {
     private Integer id;
     // 读书用户

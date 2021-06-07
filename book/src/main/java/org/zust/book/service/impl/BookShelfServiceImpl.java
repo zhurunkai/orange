@@ -12,6 +12,7 @@ import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookShelfService;
 import org.zust.interfaceapi.utils.ResType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -27,7 +28,17 @@ public class BookShelfServiceImpl implements BookShelfService {
 
     @Override
     public ResType addBookShelf(HashMap map) {
-        return null;
+
+        String name = (String) map.get("name");
+        Integer isRoot = (Integer) map.get("is_root");
+        if (isRoot==null) isRoot = 1;
+        Integer ownerId = (Integer) map.get("owner");
+
+        if (name==null || ownerId==null) return new ResType(400);
+
+        BookShelf save = bookShelfRepository.save(new BookShelf(name, ownerId, isRoot));
+        return new ResType(200,e2d(save));
+
     }
 
     @Override
@@ -43,20 +54,28 @@ public class BookShelfServiceImpl implements BookShelfService {
     @Override
     public ResType getBookShelfById(Integer id) {
 
-        if (id==null) return new ResType(101);
-
-        BookShelf bookShelf = bookShelfRepository.findBookShelfById(id);
-
+        BookShelf bookShelf = bookShelfRepository.findById(id).orElse(null);
         if (bookShelf!=null){
             return new ResType(200,e2d(bookShelf));
         }else {
-            return new ResType(102); // 11表示
+            return new ResType(400);
         }
+
+
     }
 
     @Override
     public ResType getBookShelfLists(String Token) {
-        return null;
+        ArrayList<BookShelf> list = bookShelfRepository.findAllByOwner(1);
+
+        ArrayList<BookShelfDto> returnList = new ArrayList<>();
+        if (list!=null){
+            for (BookShelf bookShelf : list) {
+                returnList.add(e2d(bookShelf));
+            }
+        }
+
+        return new ResType(200,returnList);
     }
 
     public BookShelfDto e2d(BookShelf bookShelf) {

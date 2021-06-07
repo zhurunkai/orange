@@ -1,11 +1,16 @@
 package org.zust.interfaceapi.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class BookDto {
         private Integer id;
         // 书名
         private String name;
         // 书的主人id
-        private Integer owner;
+        private BookUserDto owner;
         // 书的封面图url
         private String cover;
         // 书的epub格式文件地址

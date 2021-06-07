@@ -2,6 +2,7 @@ package org.zust.interfaceapi.service;
 
 import org.zust.interfaceapi.utils.ResType;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -11,6 +12,8 @@ import java.util.Map;
  **/
 public interface BookService {
 
-    public ResType getBook();
+    public ResType getBook(Integer id);
+
+    public ResType addBook(HashMap map);
 
 }

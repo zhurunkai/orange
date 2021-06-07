@@ -15,4 +15,5 @@ public class ResType<T> {
         this.status = status;
         this.data = data;
     }
+
 }
