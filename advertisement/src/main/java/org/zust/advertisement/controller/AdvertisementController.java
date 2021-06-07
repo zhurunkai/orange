@@ -25,7 +25,7 @@ public class AdvertisementController {
       if(res.getStatus()==200) {
           return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(), HttpStatus.valueOf(res.getStatus()));
       }
-      return new ResponseEntity<String>((String)res.getMsg(), HttpStatus.valueOf(res.getStatus()));
+      return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
   }
 
   }
