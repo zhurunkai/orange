@@ -30,14 +30,35 @@ public class BookShelfServiceImpl implements BookShelfService {
     public ResType addBookShelf(HashMap map) {
 
         String name = (String) map.get("name");
-        Integer isRoot = (Integer) map.get("is_root");
-        if (isRoot==null) isRoot = 1;
-        Integer ownerId = (Integer) map.get("owner");
+        String isRoot;
+        String ownerId;
 
-        if (name==null || ownerId==null) return new ResType(400);
+        try {
+            isRoot = (String) map.get("is_root");
+            int iroot = -1;
+            if (isRoot==null)
+                iroot = 0;
+            else
+                iroot = Integer.parseInt(isRoot);
 
-        BookShelf save = bookShelfRepository.save(new BookShelf(name, ownerId, isRoot));
-        return new ResType(200,e2d(save));
+            ownerId = (String) map.get("owner");
+            if (name==null || ownerId==null) return new ResType(400,103);
+
+            // 需要调用cgg那边通过用户id查找用户的接口
+            Integer oid = Integer.parseInt(ownerId);
+            //
+
+            BookShelf save = bookShelfRepository.save(new BookShelf(name, oid, iroot));
+            return new ResType(e2d(save));
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResType(400,105);
+        }
+
+
+
+
+
 
     }
 
@@ -48,18 +69,50 @@ public class BookShelfServiceImpl implements BookShelfService {
 
     @Override
     public ResType updateBookShelfById(HashMap map) {
-        return null;
+
+        String name = (String) map.get("name");
+        Integer uid = (Integer) map.get("uid");
+        String bsid = (String) map.get("id");
+
+        try {
+            if (bsid==null) return new ResType(400,101);
+
+            // 判断该用户的书架里是否已使用该name
+            BookShelf byNameAndOwner = bookShelfRepository.findByNameAndOwner(name, uid);
+            if (byNameAndOwner!=null) return new ResType(400,106);
+
+            BookShelf bookShelf = bookShelfRepository.findById(Integer.parseInt(bsid)).orElse(null);
+            if (bookShelf!=null){
+                bookShelf.setName(name);
+                BookShelf save = bookShelfRepository.save(bookShelf);
+                return new ResType(e2d(save));
+            }else {
+                return new ResType(400,102);
+            }
+        }catch (Exception e){
+            return new ResType(400,105);
+        }
+
     }
 
     @Override
-    public ResType getBookShelfById(Integer id) {
+    public ResType getBookShelfById(String id) {
 
-        BookShelf bookShelf = bookShelfRepository.findById(id).orElse(null);
-        if (bookShelf!=null){
-            return new ResType(200,e2d(bookShelf));
-        }else {
-            return new ResType(400);
+        if (id==null) return new ResType(400,101);
+
+        try {
+
+            BookShelf bookShelf = bookShelfRepository.findById(Integer.parseInt(id)).orElse(null);
+            if (bookShelf!=null){
+                return new ResType(e2d(bookShelf));
+            }else {
+                return new ResType(400,102);
+            }
+        }catch (Exception e){
+            return new ResType(400,105);
         }
+
+
 
 
     }
@@ -75,7 +128,7 @@ public class BookShelfServiceImpl implements BookShelfService {
             }
         }
 
-        return new ResType(200,returnList);
+        return new ResType(returnList);
     }
 
     public BookShelfDto e2d(BookShelf bookShelf) {

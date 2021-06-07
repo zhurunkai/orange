@@ -12,7 +12,7 @@ import java.util.Map;
  **/
 public interface BookService {
 
-    public ResType getBook(Integer id);
+    public ResType getBook(String id);
 
     public ResType addBook(HashMap map);
 

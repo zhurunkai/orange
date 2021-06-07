@@ -21,7 +21,7 @@ public interface BookShelfService {
     public ResType updateBookShelfById(HashMap map);
 
 //  根据id获取书架信息
-    public ResType getBookShelfById(Integer id);
+    public ResType getBookShelfById(String id);
 
 //  根据用户token获取书架列表
     public ResType getBookShelfLists(String Token);

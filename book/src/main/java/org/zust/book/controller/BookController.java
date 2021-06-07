@@ -25,16 +25,12 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBook(@PathVariable String id)
-    {
-
-        if (id==null)return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("101");
-
-        ResType res = bookService.getBook(Integer.parseInt(id));
+    public ResponseEntity<?> getBook(@PathVariable String id) {
+        ResType res = bookService.getBook(id);
         if (res.getStatus() == 200) {
             return ResponseEntity.ok(res.getData());
         }else {
-            return ResponseEntity.status(res.getStatus()).body("102");
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
         }
     }
 }
