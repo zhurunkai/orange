@@ -1,4 +1,4 @@
-package org.zust.account.auser.entity;
+package org.zust.account.entity;
 
 import lombok.Data;
 import lombok.Getter;
