@@ -17,7 +17,6 @@ public class CommonController {
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) {
         commonService.uploadfile(file);
-
         return("ok");
     }
 
