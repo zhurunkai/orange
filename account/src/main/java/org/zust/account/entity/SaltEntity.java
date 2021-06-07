@@ -24,4 +24,14 @@ public class SaltEntity {
     private Date dateTime;
     @Column(name="captcha")
     private String captcha;
+
+    public SaltEntity(String phone, String salt, String captcha) {
+        this.phone = phone;
+        this.salt = salt;
+        this.dateTime = new Date();
+        this.captcha = captcha;
+    }
+
+    public SaltEntity() {
+    }
 }

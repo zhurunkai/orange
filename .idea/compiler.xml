@@ -14,6 +14,15 @@
         <module name="book" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="account" target="1.8" />
+      <module name="advertisement" target="1.8" />
+      <module name="book" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="interface-api" target="1.8" />
+      <module name="orange" target="1.8" />
+      <module name="recommend" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

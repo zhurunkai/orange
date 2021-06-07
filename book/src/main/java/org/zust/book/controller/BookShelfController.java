@@ -24,7 +24,6 @@ public class BookShelfController {
     public ResponseEntity<?> getBookShelfById(@PathVariable Integer id) {
 
         ResType res = bookShelfService.getBookShelfById(id);
-
         if(res.getStatus()==200) {
             return new ResponseEntity<>((BookShelfDto)res.getData(), HttpStatus.valueOf(res.getStatus()));
         }
