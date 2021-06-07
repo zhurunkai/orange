@@ -32,14 +32,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             picture = (String)params.get("picture");
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(400);
+            return new ResType(400,104);
         }
         try {
             AdvertisementEntity advertisementEntity = advertisementDao.save(new AdvertisementEntity(title,url,picture,1, 10000.0,"正在投放"));
-            return new ResType(200,e2d(advertisementEntity));
+            return new ResType(e2d(advertisementEntity));
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500);
+            return new ResType(500,102);
         }
     }
 
@@ -47,10 +47,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public ResType getAdvertisement(Integer id){
         try{
             AdvertisementEntity advertisementEntity = advertisementDao.findById(id).orElse(null);
-            return new ResType(200,e2d(advertisementEntity));
+            return new ResType(e2d(advertisementEntity));
         }catch (Exception e) {
             e.printStackTrace();
-            return new ResType(400);
+            return new ResType(500,101);
         }
     }
 
