@@ -26,14 +26,24 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
-    public ResType getBook(Integer id) {
+    public ResType getBook(String id) {
 
-        Book book = bookRepository.findById(id).orElse(null);
-        if (book!=null){
-            return new ResType(200,e2d(book));
-        }else {
-            return new ResType(400);
+        if (id==null) return new ResType(400,101);
+
+        try {
+            Book book = bookRepository.findById(Integer.parseInt(id)).orElse(null);
+            if (book!=null){
+                return new ResType(e2d(book));
+            }else {
+                return new ResType(400,102);
+            }
+        }catch (Exception e){
+            return new ResType(400,105);
         }
+
+
+
+
     }
 
     @Override

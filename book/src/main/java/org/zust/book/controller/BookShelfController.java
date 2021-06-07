@@ -27,13 +27,11 @@ public class BookShelfController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getBookShelfById(@PathVariable String id) {
 
-        if (id==null)return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("101");
-
-        ResType res = bookShelfService.getBookShelfById(Integer.parseInt(id));
+        ResType res = bookShelfService.getBookShelfById(id);
         if (res.getStatus() == 200) {
             return ResponseEntity.ok(res.getData());
         }else {
-            return ResponseEntity.status(res.getStatus()).body("102");
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
         }
 
     }
@@ -41,24 +39,36 @@ public class BookShelfController {
     @GetMapping
     public ResponseEntity<?> getAllBookShelfByOwnerId(@RequestHeader("Authorization") String token){
 
-<<<<<<< HEAD
         ResType res = bookShelfService.getBookShelfLists(token);
         return ResponseEntity.ok(res.getData());
 
     }
 
     @PostMapping
-    public ResponseEntity<?> addAdvertisement(@RequestBody HashMap map)
-    {
+    // 书用户注册的时候，需要传is_Root = 1 来创建默认的根目录书架
+    // 普通用户创建书架时，不需要传is_Root 或者 传is_Root = 0
+    public ResponseEntity<?> addBookShelf(@RequestBody HashMap map) {
         ResType res = bookShelfService.addBookShelf(map);
-=======
-        ResType res = bookShelfService.getBookShelfById(id);
->>>>>>> b35391266d48a37332a3a3c675f06228ac44ce96
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }
-        return ResponseEntity.status(res.getStatus()).body("102");
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBookShelf(@PathVariable String id,
+                                            @RequestBody HashMap map) {
+
+        map.put("id",id);
+        map.put("uid",1);
+
+        ResType res = bookShelfService.updateBookShelfById(map);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+    }
+
 
 
 }

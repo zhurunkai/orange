@@ -15,4 +15,5 @@ public interface BookShelfRepository extends JpaRepository<BookShelf,Integer> {
 
     ArrayList<BookShelf> findAllByOwner(Integer id);
 
+    BookShelf findByNameAndOwner(String name,Integer id);
 }
