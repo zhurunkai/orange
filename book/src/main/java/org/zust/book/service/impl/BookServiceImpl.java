@@ -2,6 +2,7 @@ package org.zust.book.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.zust.interfaceapi.service.BookService;
+import org.zust.interfaceapi.utils.ResType;
 
 /**
  * @author: Linxy
@@ -10,4 +11,10 @@ import org.zust.interfaceapi.service.BookService;
  **/
 @Service
 public class BookServiceImpl implements BookService {
+
+
+    @Override
+    public ResType getBook() {
+        return null;
+    }
 }

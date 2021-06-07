@@ -1,11 +1,14 @@
 package org.zust.book.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.service.BookService;
+import org.zust.interfaceapi.utils.ResType;
+
+import java.util.Map;
 
 /**
  * @author: Linxy
@@ -14,12 +17,19 @@ import org.zust.interfaceapi.service.BookService;
  **/
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/captcha",produces = "application/json;charset=utf-8")
+@RequestMapping(value = "/book",produces = "application/json;charset=utf-8")
 public class BookController {
 
     @Autowired
     private BookService bookService;
 
-    @GetMapping()
-    public
+//    @GetMapping
+//    public ResponseEntity<?> getBook(@RequestBody Map params)
+//    {
+//
+//        if(res.getStatus()==200) {
+//            return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(), HttpStatus.valueOf(res.getStatus()));
+//        }
+//        return new ResponseEntity<String>((String)res.getMsg(), HttpStatus.valueOf(res.getStatus()));
+//    }
 }

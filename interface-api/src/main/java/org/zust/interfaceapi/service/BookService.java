@@ -1,5 +1,9 @@
 package org.zust.interfaceapi.service;
 
+import org.zust.interfaceapi.utils.ResType;
+
+import java.util.Map;
+
 /**
  * @author: Linxy
  * @Date: 2021/6/6 22:22
@@ -7,5 +11,6 @@ package org.zust.interfaceapi.service;
  **/
 public interface BookService {
 
+    public ResType getBook();
 
 }
