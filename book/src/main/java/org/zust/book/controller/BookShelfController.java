@@ -41,6 +41,7 @@ public class BookShelfController {
     @GetMapping
     public ResponseEntity<?> getAllBookShelfByOwnerId(@RequestHeader("Authorization") String token){
 
+<<<<<<< HEAD
         ResType res = bookShelfService.getBookShelfLists(token);
         return ResponseEntity.ok(res.getData());
 
@@ -50,6 +51,9 @@ public class BookShelfController {
     public ResponseEntity<?> addAdvertisement(@RequestBody HashMap map)
     {
         ResType res = bookShelfService.addBookShelf(map);
+=======
+        ResType res = bookShelfService.getBookShelfById(id);
+>>>>>>> b35391266d48a37332a3a3c675f06228ac44ce96
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }

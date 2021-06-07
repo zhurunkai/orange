@@ -7,8 +7,8 @@ import java.util.Map;
 
 public interface AdvertisementService {
     public ResType addAdvertisement(Map params);
-//    public AdvertisementDto addUrl();
-//    public AdvertisementDto addPicture();
+    public ResType getAdvertisement(Integer id);
+
 
 
 }

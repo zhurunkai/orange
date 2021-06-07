@@ -13,15 +13,15 @@ import java.util.Random;
 
 public class IdentifyingCode {
 
-    public Map<String,Object>  execute(String phone) {
+    public static Map<String,Object> execute(String phone) {
 
-        String testUsername = "userame"; //在短信宝注册的用户名
-        String testPassword = "password"; //在短信宝注册的密码
+        String testUsername = "1180290010"; //在短信宝注册的用户名
+        String testPassword = "zhurk9750"; //在短信宝注册的密码
         String testPhone = phone;
         String randomCode =random();
         String salt =md5(randomCode);
 
-        String testContent = "【万千购】您的验证码是"+randomCode+",５分钟内有效。若非本人操作请忽略此消息。"; // 注意测试时，也请带上公司简称或网站签名，发送正规内容短信。千万不要发送无意义的内容：例如 测一下、您好。否则可能会收不到
+        String testContent = "【橙心书盘】您的验证码为"+randomCode+"，在30分钟内有效。"; // 注意测试时，也请带上公司简称或网站签名，发送正规内容短信。千万不要发送无意义的内容：例如 测一下、您好。否则可能会收不到
         String httpUrl = "http://api.smsbao.com/sms";
 
         StringBuffer httpArg = new StringBuffer();
@@ -34,8 +34,14 @@ public class IdentifyingCode {
         System.out.println(result);
 
         HashMap<String, Object> map = new HashMap<>();
+        if("0".equals(result)) {
+            map.put("salt",salt);
+            map.put("randomCode",randomCode);
+            map.put("status",1);
 
-        map.put("salt",salt);
+        } else {
+            map.put("status",0);
+        }
         return map;
     }
 
