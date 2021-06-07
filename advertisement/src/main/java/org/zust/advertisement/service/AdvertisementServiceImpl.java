@@ -29,14 +29,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             picture = (String)params.get("picture");
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(400,"参数错误");
+            return new ResType(400);
         }
         try {
             AdvertisementEntity advertisementEntity = advertisementDao.save(new AdvertisementEntity(title,url,picture,1, 10000.0,"正在投放"));
-            return new ResType(200,"成功",e2d(advertisementEntity));
+            return new ResType(200,e2d(advertisementEntity));
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,"数据库操作错误");
+            return new ResType(500);
         }
     }
 
@@ -46,11 +46,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         BeanUtils.copyProperties(advertisementEntity, advertisementDto);
         return advertisementDto;
     }
-//    public static EquipmentDto equipmentE2d(Equipment equipment) {
-//        EquipmentDto equipmentDto = new EquipmentDto();
-//        BeanUtils.copyProperties(equipment,equipmentDto);
-//        return equipmentDto;
-//    }
+
 }
 
 
