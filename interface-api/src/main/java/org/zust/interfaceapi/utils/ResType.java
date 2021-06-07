@@ -5,18 +5,15 @@ import lombok.Data;
 @Data
 public class ResType {
     private int status;
-    private String msg;
     private Object data;
     public ResType() {
 
     }
-    public ResType(int status, String msg) {
+    public ResType(int status) {
         this.status = status;
-        this.msg = msg;
     }
-    public ResType(int status,String msg,Object data) {
+    public ResType(int status, Object data) {
         this.status = status;
-        this.msg = msg;
         this.data = data;
     }
 }
