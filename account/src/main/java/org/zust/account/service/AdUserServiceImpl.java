@@ -5,6 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.AdUserDao;
+import org.zust.account.dao.BookUserDao;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.AdUserEntity;
 import org.zust.account.entity.ThrowRecordsEntity;
@@ -40,6 +41,9 @@ public class AdUserServiceImpl implements AdUserService {
 
     @Autowired
     private AdUserDao adUserDao;
+
+    @Autowired
+    private BookUserDao bookUserDao;
 
     @Autowired
     private ThrowRecordsDao throwRecordsDao;
@@ -102,15 +106,19 @@ public class AdUserServiceImpl implements AdUserService {
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
 
+
+
                 BookDto bookDto = (BookDto) book.getData();
+                bookDto.setOwner();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
-
+                System.out.println(adUserDto);
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
                 throwRecordsDto.setAdvertisement(advertisementDto);
                 throwRecordsDto.setOwner(adUserDto);
+                System.out.println(throwRecordsDto);
                 list.add(throwRecordsDto);
             }
             return new ResType(list);
