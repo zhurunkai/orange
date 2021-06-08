@@ -14,6 +14,7 @@ import org.zust.account.utils.RandomProfile;
 import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
+import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class AdUserServiceImpl implements AdUserService {
 //
     @Reference(check = false)
     private AdvertisementService advertisementService;
+
+    @Reference(check = false)
+    private BookService bookService;
+
     @Autowired
     private AdUserDao adUserDao;
 
@@ -90,14 +95,17 @@ public class AdUserServiceImpl implements AdUserService {
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
 
-//                ResType book = ;
-//                Restype ad =   ;
+                String bid = Integer.toString(t.getBook());
+                Integer adid = t.getAdvertisement();
+
+                ResType book = bookService.getBook(bid);
+                ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
 
-                BookDto bookDto = new BookDto();
-                AdvertisementDto advertisementDto = new AdvertisementDto();
+                BookDto bookDto = (BookDto) book.getData();
+                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
-                System.out.println(adUserDto);
+
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
