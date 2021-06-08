@@ -1,5 +1,6 @@
 package org.zust.advertisement.service;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.zust.account.entity.ThrowRecordsEntity;
 import org.zust.advertisement.dao.AdvertisementDao;
 import org.zust.advertisement.entity.AdvertisementEntity;
 import org.zust.interfaceapi.dto.ThrowRecordsDto;
+import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.utils.ResType;
@@ -20,7 +22,7 @@ import static java.lang.Integer.valueOf;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class AdvertisementServiceImpl implements AdvertisementService {
-
+    
     @Autowired
     AdvertisementDao advertisementDao;
 

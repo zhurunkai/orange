@@ -1,8 +1,8 @@
 package org.zust.account.service;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Reference;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.AdUserDao;
 import org.zust.account.dao.ThrowRecordsDao;
@@ -13,6 +13,7 @@ import org.zust.account.utils.RandomName;
 import org.zust.account.utils.RandomProfile;
 import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.AdUserService;
+import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public class AdUserServiceImpl implements AdUserService {
 //    @Reference
 //    private AdvertisementService advertisementService;
 //
-
+    @Reference(check = false)
+    private AdvertisementService advertisementService;
     @Autowired
     private AdUserDao adUserDao;
 
