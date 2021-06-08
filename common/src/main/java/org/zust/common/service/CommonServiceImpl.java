@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Random;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class CommonServiceImpl implements CommonService {
 
     @Override

@@ -51,5 +51,15 @@ public class AdvertisementController {
         return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
     }
 
+    @GetMapping("/{id}/throw")
+    public ResponseEntity<?> getAdvertisementThrow(@PathVariable String id)
+    {
+        ResType res = advertisementService.getAdvertisementThrow(valueOf(id));
+        if (res.getStatus()==200){
+            return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(),HttpStatus.valueOf(res.getStatus()));
+        }
+        return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
+    }
+
   }
 

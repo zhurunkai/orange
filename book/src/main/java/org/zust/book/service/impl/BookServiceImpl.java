@@ -33,6 +33,7 @@ import java.util.HashMap;
  * @function:
  **/
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class BookServiceImpl implements BookService {
 
     @Autowired

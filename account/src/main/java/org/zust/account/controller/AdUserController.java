@@ -19,6 +19,17 @@ public class AdUserController {
     @Autowired
     AdUserService adUserService;
 
+
+    //广告主登录注册
+    @PostMapping("/ad")
+    public ResponseEntity<?> adUserLoginRegister(@RequestBody Map params){
+        ResType res = adUserService.lrAdUser(params);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
+
     //根据id获取广告主信息
     @GetMapping("/ad/{id}")
     public ResponseEntity<?>  findBookUserAllById(@PathVariable String id){

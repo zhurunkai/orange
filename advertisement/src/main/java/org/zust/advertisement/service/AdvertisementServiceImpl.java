@@ -3,8 +3,11 @@ package org.zust.advertisement.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.zust.account.dao.ThrowRecordsDao;
+import org.zust.account.entity.ThrowRecordsEntity;
 import org.zust.advertisement.dao.AdvertisementDao;
 import org.zust.advertisement.entity.AdvertisementEntity;
+import org.zust.interfaceapi.dto.ThrowRecordsDto;
 import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.utils.ResType;
@@ -15,11 +18,11 @@ import java.util.Map;
 import static java.lang.Integer.valueOf;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Autowired
     AdvertisementDao advertisementDao;
-
 
     @Override
     public ResType addAdvertisement(Map params) {
@@ -66,6 +69,17 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             return new ResType(500,103);
         }
 
+    }
+
+    @Override
+    public ResType getAdvertisementThrow(Integer id){
+        try{
+//            AdvertisementEntity advertisement = advertisementDao.findById(id).orElse(null);
+            return new ResType();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,103);
+        }
     }
 
 
