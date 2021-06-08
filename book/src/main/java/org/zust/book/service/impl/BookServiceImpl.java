@@ -145,6 +145,7 @@ public class BookServiceImpl implements BookService {
                     boolean epub = BookUtils.getEpub(file,fname[0]);
                     System.out.println("是否获取封面："+epub);
 
+
 //                    System.out.println("yes");
                 }else {
                     // 文件还没转好
