@@ -3,9 +3,11 @@ package org.zust.interfaceapi.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
-public class AdvertisementDto {
+public class AdvertisementDto implements Serializable {
     private Integer id;
     // 广告标题
     private String title;
