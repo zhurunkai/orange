@@ -60,9 +60,9 @@ public class AdvertisementController {
     {
         ResType res = advertisementService.getAdvertisementThrow(valueOf(id));
         if (res.getStatus()==200){
-            return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(),HttpStatus.valueOf(res.getStatus()));
+            return ResponseEntity.ok(res.getData());
         }
-        return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
 
   }
