@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface AdUserService {
 
-    public ResType findBookUserAllInformById(int buId);
+    public ResType findAdUserAllInformById(int buId);
     public ResType findAdUserBillById(int id);
 
 

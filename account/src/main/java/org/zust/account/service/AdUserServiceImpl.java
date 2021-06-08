@@ -7,8 +7,7 @@ import org.zust.account.dao.AdUserDao;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.AdUserEntity;
 import org.zust.account.entity.ThrowRecordsEntity;
-import org.zust.interfaceapi.dto.AdUserDto;
-import org.zust.interfaceapi.dto.ThrowRecordsDto;
+import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.utils.ResType;
 
@@ -19,6 +18,8 @@ import java.util.Map;
 @Service
 public class AdUserServiceImpl implements AdUserService {
 
+
+
     @Autowired
     private AdUserDao adUserDao;
 
@@ -27,7 +28,7 @@ public class AdUserServiceImpl implements AdUserService {
 
 
     @Override
-    public ResType findBookUserAllInformById(int auId) {
+    public ResType findAdUserAllInformById(int auId) {
         try {
             AdUserEntity ausere = adUserDao.findById(auId).orElse(null);
             return new ResType(e2d(ausere));
@@ -43,7 +44,18 @@ public class AdUserServiceImpl implements AdUserService {
             List<ThrowRecordsEntity> byOwner = throwRecordsDao.findByOwner(id);
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
-                list.add(e2d(t));
+
+                ResType bu =findAdUserAllInformById(id);
+
+                BookDto bookDto = new BookDto();
+                AdvertisementDto advertisementDto = new AdvertisementDto();
+                AdUserDto adUserDto = (AdUserDto) bu.getData();
+
+                ThrowRecordsDto throwRecordsDto = e2d(t);
+                throwRecordsDto.setBook(bookDto);
+                throwRecordsDto.setAdvertisement(advertisementDto);
+                throwRecordsDto.setOwner(adUserDto);
+                list.add(throwRecordsDto);
             }
             System.out.println(byOwner);
             return new ResType(list);

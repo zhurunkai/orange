@@ -22,7 +22,7 @@ public class AdUserController {
     //根据id获取广告主信息
     @GetMapping("/ad/{id}")
     public ResponseEntity<?>  findBookUserAllById(@PathVariable String id){
-        ResType res = adUserService.findBookUserAllInformById(Integer.parseInt(id));
+        ResType res = adUserService.findAdUserAllInformById(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }
