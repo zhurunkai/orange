@@ -65,6 +65,9 @@ public class BookUserServiceImpl implements BookUserService {
                 String token2 = IdentifyingCode.md5(phone+new Date().getTime());
                 BookUserEntity bookUserEntity1 = bookUserDao.findByPhone(phone);
                 bookUserEntity1.setToken(token2);
+
+                BookUserEntity data = bookUserEntity1;
+                BookUserEntity save = bookUserDao.save(data);
                 return new ResType(e2d(bookUserEntity1));
             }
         }catch(Exception e){

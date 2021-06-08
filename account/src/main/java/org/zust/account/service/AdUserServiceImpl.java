@@ -8,13 +8,15 @@ import org.zust.account.dao.AdUserDao;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.AdUserEntity;
 import org.zust.account.entity.ThrowRecordsEntity;
+import org.zust.account.utils.IdentifyingCode;
+import org.zust.account.utils.RandomName;
+import org.zust.account.utils.RandomProfile;
 import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.AdUserService;
-import org.zust.interfaceapi.service.AdvertisementService;
-import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +36,38 @@ public class AdUserServiceImpl implements AdUserService {
     @Autowired
     private ThrowRecordsDao throwRecordsDao;
 
+
+    @Override
+    public ResType lrAdUser(Map param) {
+        try{
+            String phone = (String) param.get("phone");
+            AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
+            if(adUserEntity == null){
+                Double money = 10000.00;
+                String randomName = RandomName.nameString();
+                String randomProfile = RandomProfile.profileString();
+                Double freeze =0.00;
+                String token1 = IdentifyingCode.md5(phone+new Date().getTime());
+
+                AdUserEntity data =new AdUserEntity(money,phone,randomName,randomProfile,freeze,token1);
+                AdUserEntity save = adUserDao.save(data);
+
+                return new ResType(e2d(save));
+
+            }else{
+                String token2 = IdentifyingCode.md5(phone+new Date().getTime());
+                AdUserEntity adUserEntity1 = adUserDao.findByPhone(phone);
+                adUserEntity1.setToken(token2);
+
+                AdUserEntity data = adUserEntity1;
+                AdUserEntity save = adUserDao.save(data);
+                return new ResType(e2d(adUserEntity1));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResType(400,107);
+        }
+    }
 
     @Override
     public ResType findAdUserAllInformById(int auId) {
