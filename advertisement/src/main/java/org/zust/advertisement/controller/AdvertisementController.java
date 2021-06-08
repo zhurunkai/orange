@@ -21,6 +21,7 @@ public class AdvertisementController {
     @Autowired
     private AdvertisementService advertisementService;
 
+    //新增一条广告
     @PostMapping
     public ResponseEntity<?> addAdvertisement(@RequestBody Map params)
   {
@@ -31,6 +32,7 @@ public class AdvertisementController {
       return new ResponseEntity<Integer>(res.getCode(), HttpStatus.valueOf(res.getStatus()));
   }
 
+  //根据广告id获取广告信息
     @GetMapping("/{id}")
     public ResponseEntity<?> getAdvertisement(@PathVariable String id)
     {
@@ -41,6 +43,7 @@ public class AdvertisementController {
         return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
     }
 
+    //更新广告状态
     @PatchMapping("/{id}/{status}")
     public ResponseEntity<?> changeAdvertisementStatus(@PathVariable String id,@RequestBody Map param )
     {
@@ -51,6 +54,7 @@ public class AdvertisementController {
         return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
     }
 
+    //根据广告id获得该广告的投放信息
     @GetMapping("/{id}/throw")
     public ResponseEntity<?> getAdvertisementThrow(@PathVariable String id)
     {

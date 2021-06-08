@@ -1,6 +1,7 @@
 package org.zust.book.service.impl;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
 import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookService;
+import org.zust.interfaceapi.service.CommonService;
 import org.zust.interfaceapi.utils.BookUtils;
 import org.zust.interfaceapi.utils.FileUtil;
 import org.zust.interfaceapi.utils.ResType;
@@ -35,7 +37,6 @@ import java.util.HashMap;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class BookServiceImpl implements BookService {
-
     @Autowired
     private BookRepository bookRepository;
     @Autowired

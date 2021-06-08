@@ -1,9 +1,11 @@
 package org.zust.common.service;
 
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.service.CommonService;
 import org.zust.interfaceapi.utils.ResType;
 import org.zust.interfaceapi.utils.Upload;
@@ -16,7 +18,6 @@ import java.util.Random;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class CommonServiceImpl implements CommonService {
-
     @Override
     public ResType uploadfile(MultipartFile file) {
         if (file.isEmpty()) {
