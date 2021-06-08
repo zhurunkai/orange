@@ -20,6 +20,7 @@ import org.zust.interfaceapi.service.CommonService;
 import org.zust.interfaceapi.utils.BookUtils;
 import org.zust.interfaceapi.utils.FileUtil;
 import org.zust.interfaceapi.utils.ResType;
+import org.zust.interfaceapi.utils.Upload;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
@@ -37,6 +38,8 @@ import java.util.HashMap;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class BookServiceImpl implements BookService {
+    @Reference(check=false)
+    private CommonService commonService;
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -136,33 +139,47 @@ public class BookServiceImpl implements BookService {
                 Book book = bookRepository.findById(bookChain.getOrigin()).orElse(null);
                 String originUrl = book.getOriginUrl();
                 String fileName = originUrl.substring(originUrl.lastIndexOf("/"));
+//                System.out.println(fileName);
                 String[] fname = fileName.split("\\.");
-                System.out.println("fileName = "+fname[0]);
+//                System.out.println("fileName = "+fname[0]);
 
-                File file = new File("D:/book/convert" + fname[0] + ".epub");
-                System.out.println(file.toString());
+                String epubName = fname[0] + ".epub";
+                File file = new File("D:/book/convert" + epubName);
                 if (file.exists()) {
-                    // 文件转化成功，取出封面图
-                    boolean epub = BookUtils.getEpub(file,fname[0]);
-                    System.out.println("是否获取封面："+epub);
+                    if (book.getConvertStatus()==1) return new ResType(400,109);
 
+                    // 文件转化成功
+                    // 修改转换状态码，并上传epub到云端
+                    book.setConvertStatus(1);
+                    String epubUrl = Upload.fileQcloud(file, epubName);
+                    if (epubUrl.equals(500)) return new ResType(500,107);
+                    book.setEpubUrl(epubUrl);
+                    bookRepository.save(book);
 
-//                    System.out.println("yes");
+                    // 取出封面图
+                    BookUtils.getEpub(file,fname[0]);
+
+                    String coverName = fname[0] + "_cover.jpg";
+                    String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
+                    if (coverUrl.equals(500)) return new ResType(500,107);
+
+                    // 封面上传成功
+                    book.setCover(coverUrl);
+                    bookRepository.save(book);
+                    bookChain.setCover(coverUrl);
+                    chainRepository.save(bookChain);
+
+                    return new ResType(e2d(bookChain,book));
+
                 }else {
                     // 文件还没转好
                     return new ResType(400,108);
                 }
 
-//                if (book!=null){
-//                    return new ResType(e2d(book));
-//                }else {
-//                    return new ResType(400,102);
-//                }
-
-
             }
 
-            return new ResType("ok");
+            return new ResType(400,102);
+
 
         }catch (NumberFormatException e){
             return new ResType(400,105);

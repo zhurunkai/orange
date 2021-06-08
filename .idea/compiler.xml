@@ -7,12 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="advertisement" />
         <module name="recommend" />
+        <module name="book" />
         <module name="common" />
         <module name="account" />
         <module name="interface-api" />
-        <module name="book" />
+        <module name="advertisement" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
