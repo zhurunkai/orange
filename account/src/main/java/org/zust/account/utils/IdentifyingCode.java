@@ -31,7 +31,7 @@ public class IdentifyingCode {
         httpArg.append("c=").append(encodeUrlString(testContent, "UTF-8"));
 
         String result = request(httpUrl, httpArg.toString());
-        System.out.println(result);
+//        System.out.println(result);
 
         HashMap<String, Object> map = new HashMap<>();
         if("0".equals(result)) {
@@ -52,7 +52,7 @@ public class IdentifyingCode {
         {
             result+=random.nextInt(10);
         }
-        System.out.println(result);
+//        System.out.println(result);
         return result;
     }
 

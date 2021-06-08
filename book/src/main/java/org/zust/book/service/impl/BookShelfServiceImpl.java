@@ -21,6 +21,7 @@ import java.util.HashMap;
  * @function:
  **/
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class BookShelfServiceImpl implements BookShelfService {
 
     @Autowired

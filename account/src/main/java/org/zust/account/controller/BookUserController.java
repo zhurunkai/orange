@@ -27,14 +27,15 @@ public class BookUserController {
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
     }   
     
-//    @PostMapping("/book")
-//    public ResponseEntity<?> bookUserLoginRegister(@RequestBody Map params){
-//        ResType res = bookUserService.identifyCode(params);
-//        if(res.getStatus()==200) {
-//            return ResponseEntity.ok(res.getData());
-//        }
-//        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
-//    }
+    //读书人登录注册
+    @PostMapping("/book")
+    public ResponseEntity<?> bookUserLoginRegister(@RequestBody Map params){
+        ResType res = bookUserService.lrBookUser(params);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
 
     //根据id获取读书人信息
     @GetMapping("/book/{id}")

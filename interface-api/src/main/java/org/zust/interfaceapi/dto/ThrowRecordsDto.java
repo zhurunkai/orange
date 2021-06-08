@@ -21,5 +21,7 @@ public class ThrowRecordsDto {
     // 投放的广告
     private AdvertisementDto advertisement;
     // 查看广告的读书用户
-    private BookUserDto owner;
+    private AdUserDto owner;
+
+
 }

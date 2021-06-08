@@ -1,5 +1,6 @@
 package org.zust.account.service;
 
+import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,13 +9,17 @@ import org.zust.account.dao.SaltDao;
 import org.zust.account.entity.BookUserEntity;
 import org.zust.account.entity.SaltEntity;
 import org.zust.account.utils.IdentifyingCode;
+import org.zust.account.utils.RandomName;
+import org.zust.account.utils.RandomProfile;
 import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.utils.ResType;
 
+import java.util.Date;
 import java.util.Map;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class BookUserServiceImpl implements BookUserService {
     @Autowired
     private SaltDao saltDao;
@@ -34,9 +39,7 @@ public class BookUserServiceImpl implements BookUserService {
         String phone = (String) param.get("phone");
 
         SaltEntity data = new SaltEntity(phone,salt,randomcode);
-        System.out.println(data);
         SaltEntity save = saltDao.save(data);
-        System.out.println(save);
 
         return new ResType(save);
     }
@@ -44,9 +47,39 @@ public class BookUserServiceImpl implements BookUserService {
     @Override
     public ResType lrBookUser(Map param) {
 
-        return null;
+        try{
+            String phone = (String) param.get("phone");
+            BookUserEntity bookUserEntity = bookUserDao.findByPhone(phone);
+            if(bookUserEntity == null){
+                String randomProfile = RandomProfile.profileString();
+                Integer age = 0;
+                String randomName = RandomName.nameString();
+                String sex = "男";
+                String token1 = IdentifyingCode.md5(phone+new Date().getTime());
+
+                BookUserEntity data =new BookUserEntity(phone,randomProfile,age,randomName,sex,token1);
+                BookUserEntity save = bookUserDao.save(data);
+
+                return new ResType(e2d(save));
+
+            }else{
+                String token2 = IdentifyingCode.md5(phone+new Date().getTime());
+                BookUserEntity bookUserEntity1 = bookUserDao.findByPhone(phone);
+                bookUserEntity1.setToken(token2);
+
+                BookUserEntity data = bookUserEntity1;
+                BookUserEntity save = bookUserDao.save(data);
+                return new ResType(e2d(bookUserEntity1));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResType(400,107);
+        }
+
+
     }
 
+    //通过id查找读书人的所有信息
     @Override
     public ResType findBookUserAllInformById(int buId) {
         try {
@@ -64,5 +97,13 @@ public class BookUserServiceImpl implements BookUserService {
         BookUserDto bookUserDto=new BookUserDto();
         BeanUtils.copyProperties(bookUserEntity,bookUserDto);
         return  bookUserDto;
+    }
+
+    private BookUserEntity d2e (BookUserDto bookUserDto){
+        if(bookUserDto==null)
+            return null;
+        BookUserEntity bookUserEntity=new BookUserEntity();
+        BeanUtils.copyProperties(bookUserDto,bookUserEntity);
+        return bookUserEntity;
     }
 }

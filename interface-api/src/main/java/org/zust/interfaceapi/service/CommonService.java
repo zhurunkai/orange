@@ -2,8 +2,9 @@ package org.zust.interfaceapi.service;
 
 
 import org.springframework.web.multipart.MultipartFile;
+import org.zust.interfaceapi.utils.ResType;
 
 public interface CommonService {
 
-    String uploadfile(MultipartFile file);
+    ResType uploadfile(MultipartFile file);
 }

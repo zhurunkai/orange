@@ -12,6 +12,7 @@ import org.zust.recommend.dto.BookId2BuserIdDto;
 import java.util.*;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class RecommendServiceImpl implements RecommendService {
 
     // 基于用户的协同过滤算法
@@ -26,12 +27,12 @@ public class RecommendServiceImpl implements RecommendService {
         lists.add(new BookChainDto(6,"林炫宇天王","nih",new BookShelfDto(6,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(7,"林炫宇天王","nih",new BookShelfDto(7,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(5,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(1,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(8,"林炫宇天王","nih",new BookShelfDto(8,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
-        lists.add(new BookChainDto(9,"林炫宇天王","nih",new BookShelfDto(9,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(1,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(9,"林炫宇天王","nih",new BookShelfDto(9,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(10,"林炫宇天王","nih",new BookShelfDto(10,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(3,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(11,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(12,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(13,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(7,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
-        lists.add(new BookChainDto(14,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(2,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(14,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(2,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(3,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(15,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(2,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(16,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(17,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(4,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
@@ -51,6 +52,7 @@ public class RecommendServiceImpl implements RecommendService {
                 buserId2BookCollection.get(bookId2BuserIdDto.getBuserId()).add(bookId2BuserIdDto.getBookId());
             } else {
                 buserId2BookCollection.put(bookId2BuserIdDto.getBuserId(),new ArrayList<>());
+                buserId2BookCollection.get(bookId2BuserIdDto.getBuserId()).add(bookId2BuserIdDto.getBookId());
             }
         }
 //        for(Integer key : buserId2BookCollection.keySet()){
@@ -113,11 +115,60 @@ public class RecommendServiceImpl implements RecommendService {
         return new ResType(similarBooksToSetToList);
     }
 
+    public ResType itemBasedCF() {
+        //        获取所有的chain
+        List<BookChainDto> lists = new ArrayList<>();
+        lists.add(new BookChainDto(1,"林炫宇天王","nih",new BookShelfDto(1,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(1,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(2,"林炫宇天王","nih",new BookShelfDto(2,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(2,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(3,"林炫宇天王","nih",new BookShelfDto(3,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(3,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(4,"林炫宇天王","nih",new BookShelfDto(4,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(4,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(4,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(5,"林炫宇天王","nih",new BookShelfDto(5,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(4,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(1,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(6,"林炫宇天王","nih",new BookShelfDto(6,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(7,"林炫宇天王","nih",new BookShelfDto(7,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(5,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(1,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(8,"林炫宇天王","nih",new BookShelfDto(8,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(9,"林炫宇天王","nih",new BookShelfDto(9,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(10,"林炫宇天王","nih",new BookShelfDto(10,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(3,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(11,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(12,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(13,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(7,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(14,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(2,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(3,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(15,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(2,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(16,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(3,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(17,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(4,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(6,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(18,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(4,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(7,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(19,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(5,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(20,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(5,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(21,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(1,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(22,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+        lists.add(new BookChainDto(23,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
+
+        // 对初始chain集合进行降维，获得BookId2BuserIDto
+        List<BookId2BuserIdDto> bookId2BuserIdDtos = dimensionReduction2UserBasedCF(lists);
+        // 改造为（书id：用户集合）的map
+        HashMap<Integer,List<Integer>> bookId2BuserCollection = new HashMap<>();
+        for(BookId2BuserIdDto bookId2BuserIdDto: bookId2BuserIdDtos) {
+            if (!bookId2BuserCollection.containsKey(bookId2BuserIdDto.getBookId())) {
+                bookId2BuserCollection.put(bookId2BuserIdDto.getBookId(), new ArrayList<>());
+            }
+            bookId2BuserCollection.get(bookId2BuserIdDto.getBookId()).add(bookId2BuserIdDto.getBuserId());
+        }
+        System.out.println(bookId2BuserCollection);
+        Integer bookId = 3;
+        // 首先定义一个书籍3与其他用户的相似度map，之后进行遍历
+        HashMap<Integer,Double> bookSimilarity = new HashMap<>();
+
+        return null;
+    }
+
+
     // 将BookChain集合降维为BookId2BuserId集合
     public List<BookId2BuserIdDto> dimensionReduction2UserBasedCF(List<BookChainDto> bookChainDtos) {
         List<BookId2BuserIdDto> bookId2BuserIdDtos = new ArrayList<>();
         for (BookChainDto bookChainDto : bookChainDtos) {
             bookId2BuserIdDtos.add(new BookId2BuserIdDto(bookChainDto.getOrigin().getId(),bookChainDto.getOwner().getId()));
+        }
+        for (BookId2BuserIdDto bookId2BuserIdDto : bookId2BuserIdDtos) {
+            System.out.println(bookId2BuserIdDto);
         }
         return bookId2BuserIdDtos;
     }
