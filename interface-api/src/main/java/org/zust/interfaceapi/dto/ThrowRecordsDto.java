@@ -23,59 +23,5 @@ public class ThrowRecordsDto {
     // 查看广告的读书用户
     private AdUserDto owner;
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Date getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(Date datetime) {
-        this.datetime = datetime;
-    }
-
-    public Double getCost() {
-        return cost;
-    }
-
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
-
-    public BookDto getBook() {
-        return book;
-    }
-
-    public void setBook(BookDto book) {
-        this.book = book;
-    }
-
-    public AdvertisementDto getAdvertisement() {
-        return advertisement;
-    }
-
-    public void setAdvertisement(AdvertisementDto advertisement) {
-        this.advertisement = advertisement;
-    }
-
-    public AdUserDto getOwner() {
-        return owner;
-    }
-
-    public void setOwner(AdUserDto owner) {
-        this.owner = owner;
-    }
 }

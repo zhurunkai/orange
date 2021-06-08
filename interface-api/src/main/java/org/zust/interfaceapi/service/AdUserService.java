@@ -9,6 +9,7 @@ public interface AdUserService {
 
     public ResType findAdUserAllInformById(int buId);
     public ResType findAdUserBillById(int id);
+    public ResType findRecordsByAdId(int id);
 
 
 

@@ -29,10 +29,20 @@ public class AdUserController {
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
     }
 
-    //查找广告主账单
+    //根据广告主id查找广告主账单
     @GetMapping("/ad/{id}/money/history")
     public ResponseEntity<?>  findBillById(@PathVariable String id){
         ResType res = adUserService.findAdUserBillById(Integer.parseInt(id));
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
+
+    //根据广告id获取投放记录
+    @GetMapping("/ad/{id}/throw")
+    public ResponseEntity<?> findRecordsById(@PathVariable String id){
+        ResType res = adUserService.findRecordsByAdId(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }

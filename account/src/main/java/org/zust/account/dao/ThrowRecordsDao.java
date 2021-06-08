@@ -6,5 +6,6 @@ import org.zust.account.entity.ThrowRecordsEntity;
 import java.util.List;
 
 public interface ThrowRecordsDao extends JpaRepository<ThrowRecordsEntity,Integer> {
-    public List<ThrowRecordsEntity> findByOwner(int ownerid);
+    public List<ThrowRecordsEntity> findByOwner(int ownerId);
+    public List<ThrowRecordsEntity> findByAdvertisement(int adId);
 }
