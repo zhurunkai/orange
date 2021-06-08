@@ -3,8 +3,13 @@ package org.zust.interfaceapi.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class BookChainDto {
     private Integer id;
     // 书名
