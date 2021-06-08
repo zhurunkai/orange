@@ -10,6 +10,8 @@ import org.zust.interfaceapi.utils.Upload;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Random;
 
 @Service
 public class CommonServiceImpl implements CommonService {
@@ -17,28 +19,28 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public ResType uploadfile(MultipartFile file) {
         if (file.isEmpty()) {
-            System.out.println('n');
-            return new ResType(400,102);
+            return new ResType(500,106);
             //"上传失败，请选择文件"
         }
-        System.out.println("haha");
+
         String fileName = file.getOriginalFilename();
         String filePath = "D://cs/";
+        Integer random = (int) (Math.random() * 10000);
         String trueFile =filePath + fileName;
-        File dest = new File(filePath + fileName);
+        File dest = new File(filePath + random+ new Date().getTime() + fileName);
 
         try {
             file.transferTo(dest);
-            String qcloud = Upload.fileQcloud(dest,fileName);
-            System.out.println(qcloud);
-            String url ="https://orange-1258976754.cos.ap-shanghai.myqcloud.com/"+ fileName;
-            return new ResType(url);
+            String realFileName = random+ new Date().getTime() +fileName;
+            String qcloud = Upload.fileQcloud(dest,realFileName);
+            return new ResType(qcloud);
 
         } catch (IOException e) {
             e.printStackTrace();
+            return new ResType(500,107);
+            //"上传失败！"
         }
-        return new ResType(400,102);
-        //"上传失败！"
+
     }
 }
 
