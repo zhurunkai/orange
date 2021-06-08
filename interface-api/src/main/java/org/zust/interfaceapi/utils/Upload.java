@@ -33,7 +33,7 @@ public class Upload {
         try{
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file);
             PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
-            return "200";
+            return "https://orange-1258976754.cos.ap-shanghai.myqcloud.com/"+ fileName;
         }catch (Exception e){
             e.printStackTrace();
             return "500";

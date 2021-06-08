@@ -4,5 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.zust.account.entity.BookUserEntity;
 
 public interface BookUserDao extends JpaRepository<BookUserEntity,Integer> {
+    public BookUserEntity findByPhone(String phone);
 
 }

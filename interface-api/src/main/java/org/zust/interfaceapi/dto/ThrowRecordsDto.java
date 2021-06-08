@@ -1,12 +1,13 @@
 package org.zust.interfaceapi.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ThrowRecordsDto {
     private Integer id;
     // 投放类型 "点击"或"查看"
@@ -20,5 +21,7 @@ public class ThrowRecordsDto {
     // 投放的广告
     private AdvertisementDto advertisement;
     // 查看广告的读书用户
-    private BookUserDto owner;
+    private AdUserDto owner;
+
+
 }
