@@ -9,6 +9,7 @@ import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,4 +34,20 @@ public class BookController {
             return ResponseEntity.status(res.getStatus()).body(res.getCode());
         }
     }
+
+    @PostMapping("/shelf/{id}/chain/origin")
+    public ResponseEntity<?> addBookShelf(@PathVariable String id
+                                         ,@RequestBody HashMap map) {
+        // 从token里解析出用户，再存入用户id
+        map.put("owner",1);
+        map.put("bookshelf",Integer.parseInt(id));
+        ResType res = bookService.addBook(map);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+    }
+
+
+
 }
