@@ -44,7 +44,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public ResType getAdvertisement(Integer id){
+    public ResType getAdvertisement(Integer id) {
         try{
             AdvertisementEntity advertisementEntity = advertisementDao.findById(id).orElse(null);
             return new ResType(e2d(advertisementEntity));
@@ -52,6 +52,20 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             e.printStackTrace();
             return new ResType(500,101);
         }
+    }
+
+    @Override
+    public ResType changeAdvertisementStatus(Integer id,String status) {
+        try{
+            AdvertisementEntity advertisement = advertisementDao.findById(id).orElse(null);
+            advertisement.setStatus(status);
+            advertisement = advertisementDao.save(advertisement);
+            return new ResType(e2d(advertisement));
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,103);
+        }
+
     }
 
 

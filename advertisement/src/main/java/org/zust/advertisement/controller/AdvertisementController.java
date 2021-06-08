@@ -41,5 +41,15 @@ public class AdvertisementController {
         return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
     }
 
+    @PatchMapping("/{id}/{status}")
+    public ResponseEntity<?> changeAdvertisementStatus(@PathVariable String id,@RequestBody Map param )
+    {
+        ResType res = advertisementService.changeAdvertisementStatus(valueOf(id),(String) param.get("status"));
+        if (res.getStatus()==200){
+            return new ResponseEntity<AdvertisementDto>((AdvertisementDto)res.getData(),HttpStatus.valueOf(res.getStatus()));
+        }
+        return new ResponseEntity<Integer>(res.getCode(),HttpStatus.valueOf(res.getStatus()));
+    }
+
   }
 
