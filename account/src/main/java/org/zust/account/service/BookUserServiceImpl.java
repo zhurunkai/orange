@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class BookUserServiceImpl implements BookUserService {
     @Autowired
     private SaltDao saltDao;

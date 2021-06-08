@@ -12,6 +12,7 @@ import org.zust.recommend.dto.BookId2BuserIdDto;
 import java.util.*;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class RecommendServiceImpl implements RecommendService {
 
     // 基于用户的协同过滤算法

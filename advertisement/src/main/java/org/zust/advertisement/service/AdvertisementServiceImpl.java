@@ -15,6 +15,7 @@ import java.util.Map;
 import static java.lang.Integer.valueOf;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Autowired

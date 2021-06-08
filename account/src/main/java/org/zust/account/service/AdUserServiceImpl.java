@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@org.apache.dubbo.config.annotation.Service
 public class AdUserServiceImpl implements AdUserService {
 
 //    @Reference
