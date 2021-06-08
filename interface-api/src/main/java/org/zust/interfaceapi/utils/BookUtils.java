@@ -34,7 +34,7 @@ public class BookUtils {
         return flag;
     }
 
-    public static boolean getEpub(File file){
+    public static boolean getEpub(File file,String fname){
 
         boolean flag = false;
 
@@ -56,7 +56,7 @@ public class BookUtils {
             Resource r = (Resource) jk.get("images/calibre_cover.jpg");
             InputStream inn = r.getInputStream();
 
-            FileUtil.copyInputStreamToFile(inn,new File("D:/book/convert/calibre_cover.jpg"));
+            FileUtil.copyInputStreamToFile(inn,new File("D:/book/convert"+fname+"_cover.jpg"));
 
 //            System.out.println("所有资源数量为：" + resources.size());
             //获取所有的资源数据

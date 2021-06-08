@@ -56,9 +56,6 @@ public class BookServiceImpl implements BookService {
             return new ResType(400,105);
         }
 
-
-
-
     }
 
     @Override
@@ -104,12 +101,6 @@ public class BookServiceImpl implements BookService {
                     String fileName = (String) downloader.get("fileName");
                     // 默认转化的文件夹为convert
                     BookUtils.convert("D:/book/download" + fileName +".mobi", "D:/book/convert" + fileName + ".epub");
-                    // 转化成功，则获取封面图
-    //                                if (con){
-    //                                    boolean epub = BookUtils.getEpub(new File("D:/book/convert" + fileName + ".epub"));
-    //                                    System.out.println("是否获取封面："+epub);
-    //                                }
-    //                            }
                 }
 //
 
@@ -129,6 +120,52 @@ public class BookServiceImpl implements BookService {
         }
 
         return null;
+    }
+
+    @Override
+    public ResType checkConvert(String chain) {
+
+        if (chain==null) return new ResType(400,101);
+
+        try {
+            BookChain bookChain = chainRepository.findById(Integer.parseInt(chain)).orElse(null);
+
+            if (bookChain!=null){
+                Book book = bookRepository.findById(bookChain.getOrigin()).orElse(null);
+                String originUrl = book.getOriginUrl();
+                String fileName = originUrl.substring(originUrl.lastIndexOf("/"));
+                String[] fname = fileName.split("\\.");
+                System.out.println("fileName = "+fname[0]);
+
+                File file = new File("D:/book/convert" + fname[0] + ".epub");
+                System.out.println(file.toString());
+                if (file.exists()) {
+                    // 文件转化成功，取出封面图
+                    boolean epub = BookUtils.getEpub(file,fname[0]);
+                    System.out.println("是否获取封面："+epub);
+
+//                    System.out.println("yes");
+                }else {
+                    // 文件还没转好
+                    return new ResType(400,108);
+                }
+
+//                if (book!=null){
+//                    return new ResType(e2d(book));
+//                }else {
+//                    return new ResType(400,102);
+//                }
+
+
+            }
+
+            return new ResType("ok");
+
+        }catch (NumberFormatException e){
+            return new ResType(400,105);
+        }
+
+
     }
 
     public BookDto e2d(Book book) {

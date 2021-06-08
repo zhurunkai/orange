@@ -48,6 +48,15 @@ public class BookController {
         return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
 
+    @GetMapping("/shelf/{id}/chain/origin")
+    public ResponseEntity<?> checkConvert(@PathVariable String id) {
+
+        ResType res = bookService.checkConvert(id);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+    }
 
 
 }

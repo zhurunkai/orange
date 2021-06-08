@@ -68,6 +68,7 @@ public class FileUtil{
         }
     }
 
+    // 将输入流写入file
     public static boolean copyInputStreamToFile(InputStream in,File file) {
 
         Boolean flag = false;
