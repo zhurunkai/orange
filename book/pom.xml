@@ -20,7 +20,17 @@
             <artifactId>interface-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+<<<<<<< Updated upstream
 
+=======
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-dependencies-zookeeper</artifactId>
+            <type>pom</type>
+            <version>2.7.3</version>
+
+        </dependency>
+>>>>>>> Stashed changes
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
@@ -33,6 +43,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
