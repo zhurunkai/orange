@@ -3,6 +3,7 @@ package org.zust.account.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.utils.ResType;
@@ -46,6 +47,19 @@ public class BookUserController {
         }
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
     }
+
+    //根据用户id获取其标签
+    @GetMapping("/book/{id}/tabs")
+    public ResponseEntity<?>  getUserTabs(@PathVariable String id){
+        ResType res = bookUserService.findTabsByBuid(Integer.parseInt(id));
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
+
+
+
 
 }
 

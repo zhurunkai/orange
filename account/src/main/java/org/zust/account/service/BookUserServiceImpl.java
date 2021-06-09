@@ -1,13 +1,15 @@
 package org.zust.account.service;
 
-import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.BookUserDao;
 import org.zust.account.dao.SaltDao;
+import org.zust.account.dao.TabWeightDao;
 import org.zust.account.entity.BookUserEntity;
 import org.zust.account.entity.SaltEntity;
+import org.zust.account.entity.TabEntity;
+import org.zust.account.entity.TabWeightEntity;
 import org.zust.account.utils.IdentifyingCode;
 import org.zust.account.utils.RandomName;
 import org.zust.account.utils.RandomProfile;
@@ -15,7 +17,9 @@ import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.utils.ResType;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,8 +27,13 @@ import java.util.Map;
 public class BookUserServiceImpl implements BookUserService {
     @Autowired
     private SaltDao saltDao;
+
     @Autowired
     private BookUserDao bookUserDao;
+
+    @Autowired
+    private TabWeightDao tabWeightDao;
+
 
 
     //读者登录所用验证码
@@ -89,6 +98,23 @@ public class BookUserServiceImpl implements BookUserService {
             e.printStackTrace();
             return new ResType(500,101);
         }
+    }
+
+    @Override
+    public ResType findTabsByBuid(int id) {
+        List <TabWeightEntity> tabWeightEntities = tabWeightDao.findTagsByBuId(id);
+        List <TabEntity> tabEntities = new ArrayList<>();
+
+        for(TabWeightEntity t :tabWeightEntities){
+
+
+        }
+
+
+
+
+
+        return null;
     }
 
     private BookUserDto e2d(BookUserEntity bookUserEntity) {

@@ -5,7 +5,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.AdUserDao;
-import org.zust.account.dao.BookUserDao;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.AdUserEntity;
 import org.zust.account.entity.ThrowRecordsEntity;
@@ -42,8 +41,6 @@ public class AdUserServiceImpl implements AdUserService {
     @Autowired
     private AdUserDao adUserDao;
 
-    @Autowired
-    private BookUserDao bookUserDao;
 
     @Autowired
     private ThrowRecordsDao throwRecordsDao;
@@ -109,7 +106,7 @@ public class AdUserServiceImpl implements AdUserService {
 
 
                 BookDto bookDto = (BookDto) book.getData();
-                bookDto.setOwner();
+//                bookDto.setOwner();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
                 System.out.println(adUserDto);
@@ -146,14 +143,18 @@ public class AdUserServiceImpl implements AdUserService {
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byAdvertisement) {
 
-//                ResType book = ;
-//                Restype ad =   ;
+                String bid = Integer.toString(t.getBook());
+                Integer adid = t.getAdvertisement();
+
+
                 Integer ownerId = t.getOwner();
 
+                ResType book = bookService.getBook(bid);
+                ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(ownerId);
 
-                BookDto bookDto = new BookDto();
-                AdvertisementDto advertisementDto = new AdvertisementDto();
+                BookDto bookDto = (BookDto) book.getData();
+                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
