@@ -1,11 +1,13 @@
 package org.zust.account.controller;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.zust.interfaceapi.service.BookUserService;
+import org.zust.interfaceapi.service.CommonUserService;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.Map;
@@ -16,6 +18,9 @@ public class BookUserController {
 
     @Autowired
     BookUserService bookUserService;
+
+    @Reference(check = false)
+    private CommonUserService commonUserService;
 
     //获取验证码（读者广告商通用）
     @PostMapping("/captcha")
@@ -40,7 +45,11 @@ public class BookUserController {
 
     //根据id获取读书人信息
     @GetMapping("/book/{id}")
-    public ResponseEntity<?>  findBookUserAllById(@PathVariable String id){
+    public ResponseEntity<?>  findBookUserAllById(@RequestHeader("Authorization") String token,@PathVariable String id){
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
         ResType res = bookUserService.findBookUserAllInformById(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
@@ -50,7 +59,11 @@ public class BookUserController {
 
     //根据用户id获取其标签
     @GetMapping("/book/{id}/tabs")
-    public ResponseEntity<?>  getUserTabs(@PathVariable String id){
+    public ResponseEntity<?>  getUserTabs(@RequestHeader("Authorization") String token,@PathVariable String id){
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
         ResType res = bookUserService.findTabsByBuid(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
