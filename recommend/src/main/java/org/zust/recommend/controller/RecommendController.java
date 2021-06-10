@@ -48,8 +48,8 @@ public class RecommendController {
         }
     }
 
-    @GetMapping("/tab/{id}")
-    public ResponseEntity<?> userTabRecommend(String id) {
-
-    }
+//    @GetMapping("/tab/{id}")
+//    public ResponseEntity<?> userTabRecommend(String id) {
+//
+//    }
 }
