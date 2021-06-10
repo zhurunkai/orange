@@ -105,6 +105,7 @@ public class BookUserServiceImpl implements BookUserService {
         List <TabWeightEntity> tabWeightEntities = tabWeightDao.findAllByUser(id);
         List <TabEntity> tabEntities = new ArrayList<>();
         for(TabWeightEntity t :tabWeightEntities){
+           int tag =t.getTab();
 
 
         }
