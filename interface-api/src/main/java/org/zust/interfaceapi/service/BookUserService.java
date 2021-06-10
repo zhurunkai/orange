@@ -8,4 +8,5 @@ public interface BookUserService {
     public ResType identifyCode (Map param);
     public ResType lrBookUser(Map param);
     public ResType findBookUserAllInformById(int buId);
+    public ResType findTabsByBuid(int id);
 }

@@ -1,11 +1,9 @@
 package org.zust.common.service;
 
 
-import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.service.CommonService;
 import org.zust.interfaceapi.utils.ResType;
 import org.zust.interfaceapi.utils.Upload;
@@ -13,7 +11,6 @@ import org.zust.interfaceapi.utils.Upload;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Random;
 
 @Service
 @org.apache.dubbo.config.annotation.Service

@@ -1,5 +1,6 @@
 package org.zust.advertisement.service;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,11 +9,14 @@ import org.zust.account.entity.ThrowRecordsEntity;
 import org.zust.advertisement.dao.AdvertisementDao;
 import org.zust.advertisement.entity.AdvertisementEntity;
 import org.zust.interfaceapi.dto.ThrowRecordsDto;
+import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.utils.ResType;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.Integer.valueOf;
@@ -23,6 +27,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Autowired
     AdvertisementDao advertisementDao;
+
+    @Reference(check = false)
+    private AdUserService adUserService;
 
     @Override
     public ResType addAdvertisement(Map params) {
@@ -75,10 +82,16 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public ResType getAdvertisementThrow(Integer id){
         try{
 //            AdvertisementEntity advertisement = advertisementDao.findById(id).orElse(null);
-            return new ResType();
+            if(adUserService.findRecordsByAdId(id).getStatus()!=200)
+            {
+                return new ResType(500,101);
+            }
+            System.out.println(adUserService.findRecordsByAdId(id).getData());
+            List advertisementThrow = (ArrayList) adUserService.findRecordsByAdId(id).getData();
+            return new ResType(advertisementThrow);
         }catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,103);
+            return new ResType(500,108);
         }
     }
 

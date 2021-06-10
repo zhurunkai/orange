@@ -1,8 +1,8 @@
 package org.zust.account.service;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Reference;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.AdUserDao;
 import org.zust.account.dao.ThrowRecordsDao;
@@ -13,6 +13,8 @@ import org.zust.account.utils.RandomName;
 import org.zust.account.utils.RandomProfile;
 import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.AdUserService;
+import org.zust.interfaceapi.service.AdvertisementService;
+import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.ArrayList;
@@ -30,9 +32,15 @@ public class AdUserServiceImpl implements AdUserService {
 //    @Reference
 //    private AdvertisementService advertisementService;
 //
+    @Reference(check = false)
+    private AdvertisementService advertisementService;
+
+    @Reference(check = false)
+    private BookService bookService;
 
     @Autowired
     private AdUserDao adUserDao;
+
 
     @Autowired
     private ThrowRecordsDao throwRecordsDao;
@@ -88,12 +96,18 @@ public class AdUserServiceImpl implements AdUserService {
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
 
-//                ResType book = ;
-//                Restype ad =   ;
+                String bid = Integer.toString(t.getBook());
+                Integer adid = t.getAdvertisement();
+
+                ResType book = bookService.getBook(bid);
+                ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
 
-                BookDto bookDto = new BookDto();
-                AdvertisementDto advertisementDto = new AdvertisementDto();
+
+
+                BookDto bookDto = (BookDto) book.getData();
+//                bookDto.setOwner();
+                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
                 System.out.println(adUserDto);
 
@@ -101,6 +115,7 @@ public class AdUserServiceImpl implements AdUserService {
                 throwRecordsDto.setBook(bookDto);
                 throwRecordsDto.setAdvertisement(advertisementDto);
                 throwRecordsDto.setOwner(adUserDto);
+                System.out.println(throwRecordsDto);
                 list.add(throwRecordsDto);
             }
             return new ResType(list);
@@ -128,14 +143,18 @@ public class AdUserServiceImpl implements AdUserService {
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byAdvertisement) {
 
-//                ResType book = ;
-//                Restype ad =   ;
+                String bid = Integer.toString(t.getBook());
+                Integer adid = t.getAdvertisement();
+
+
                 Integer ownerId = t.getOwner();
 
+                ResType book = bookService.getBook(bid);
+                ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(ownerId);
 
-                BookDto bookDto = new BookDto();
-                AdvertisementDto advertisementDto = new AdvertisementDto();
+                BookDto bookDto = (BookDto) book.getData();
+                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);

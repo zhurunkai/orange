@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThrowRecordsDto {
+public class ThrowRecordsDto implements Serializable {
     private Integer id;
     // 投放类型 "点击"或"查看"
     private String type;
