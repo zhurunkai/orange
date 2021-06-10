@@ -16,6 +16,7 @@ import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
 import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookService;
+import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.service.CommonService;
 import org.zust.interfaceapi.utils.BookUtils;
 import org.zust.interfaceapi.utils.FileUtil;
@@ -38,6 +39,9 @@ import java.util.HashMap;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class BookServiceImpl implements BookService {
+
+    @Reference(check = false)
+    private BookUserService bookUserService;
     @Reference(check=false)
     private CommonService commonService;
     @Autowired
@@ -46,7 +50,10 @@ public class BookServiceImpl implements BookService {
     private BookChainRepository chainRepository;
 
     @Override
-    public ResType getBook(String id) {
+    public ResType getBook(HashMap map) {
+
+        String id = (String) map.get("id");
+        Integer uid = (Integer) map.get("uid");
 
         if (id==null) return new ResType(400,101);
 
@@ -107,9 +114,8 @@ public class BookServiceImpl implements BookService {
                     // 默认转化的文件夹为convert
                     BookUtils.convert("D:/book/download" + fileName +".mobi", "D:/book/convert" + fileName + ".epub");
                 }
-//
 
-                if (chainSave!=null) return new ResType(e2d(chainSave,bookSave));
+                if (chainSave!=null) return new ResType(e2d(chainSave,bookSave,uid));
 
             }
 
@@ -169,7 +175,7 @@ public class BookServiceImpl implements BookService {
                     bookChain.setCover(coverUrl);
                     chainRepository.save(bookChain);
 
-                    return new ResType(e2d(bookChain,book));
+                    return new ResType(e2d(bookChain,book,uid));
 
                 }else {
                     // 文件还没转好
@@ -190,15 +196,17 @@ public class BookServiceImpl implements BookService {
 
     public BookDto e2d(Book book) {
         BookDto bookDto = new BookDto();
-        bookDto.setOwner(new BookUserDto());
+        ResType buRes = bookUserService.findBookUserAllInformById(book.getOwner());
+        bookDto.setOwner((BookUserDto) buRes.getData());
         BeanUtils.copyProperties(book, bookDto);
         return bookDto;
     }
 
-    public BookChainDto e2d(BookChain chain, Book book) {
+    public BookChainDto e2d(BookChain chain, Book book,Integer uid) {
         BookChainDto chainDto = new BookChainDto();
         chainDto.setOrigin(e2d(book));
-        chainDto.setOwner(new BookUserDto());
+        ResType buRes = bookUserService.findBookUserAllInformById(uid);
+        chainDto.setOwner((BookUserDto) buRes.getData());
         BeanUtils.copyProperties(chain, chainDto);
         return chainDto;
     }

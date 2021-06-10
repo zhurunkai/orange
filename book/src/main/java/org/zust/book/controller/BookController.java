@@ -28,7 +28,8 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBook(@PathVariable String id) {
+    public ResponseEntity<?> getBook(@RequestHeader("Authorization") String token,
+                                     @PathVariable String id) {
         ResType res = bookService.getBook(id);
         if (res.getStatus() == 200) {
             return ResponseEntity.ok(res.getData());
@@ -38,7 +39,8 @@ public class BookController {
     }
 
     @PostMapping("/shelf/{id}/chain/origin")
-    public ResponseEntity<?> addBookShelf(@PathVariable String id
+    public ResponseEntity<?> addBookShelf(@RequestHeader("Authorization") String token
+                                        ,@PathVariable String id
                                          ,@RequestBody HashMap map) {
         // 从token里解析出用户，再存入用户id
         map.put("owner",1);
@@ -51,7 +53,8 @@ public class BookController {
     }
 
     @GetMapping("/shelf/{id}/chain/origin")
-    public ResponseEntity<?> checkConvert(@PathVariable String id) {
+    public ResponseEntity<?> checkConvert(@RequestHeader("Authorization") String token,
+                                          @PathVariable String id) {
 
         ResType res = bookService.checkConvert(id);
         if(res.getStatus()==200) {
