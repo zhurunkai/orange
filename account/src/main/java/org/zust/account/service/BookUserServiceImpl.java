@@ -102,15 +102,12 @@ public class BookUserServiceImpl implements BookUserService {
 
     @Override
     public ResType findTabsByBuid(int id) {
-        List <TabWeightEntity> tabWeightEntities = tabWeightDao.findByUser(id);
+        List <TabWeightEntity> tabWeightEntities = tabWeightDao.findAllByUser(id);
         List <TabEntity> tabEntities = new ArrayList<>();
         for(TabWeightEntity t :tabWeightEntities){
 
 
         }
-
-
-
 
 
         return null;
