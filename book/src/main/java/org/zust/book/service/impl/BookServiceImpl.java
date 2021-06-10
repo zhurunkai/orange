@@ -42,8 +42,6 @@ public class BookServiceImpl implements BookService {
 
     @Reference(check = false)
     private BookUserService bookUserService;
-    @Reference(check=false)
-    private CommonService commonService;
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -53,7 +51,6 @@ public class BookServiceImpl implements BookService {
     public ResType getBook(HashMap map) {
 
         String id = (String) map.get("id");
-        Integer uid = (Integer) map.get("uid");
 
         if (id==null) return new ResType(400,101);
 
@@ -115,7 +112,7 @@ public class BookServiceImpl implements BookService {
                     BookUtils.convert("D:/book/download" + fileName +".mobi", "D:/book/convert" + fileName + ".epub");
                 }
 
-                if (chainSave!=null) return new ResType(e2d(chainSave,bookSave,uid));
+                if (chainSave!=null) return new ResType(e2d(chainSave,bookSave,owner));
 
             }
 
@@ -134,7 +131,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public ResType checkConvert(String chain) {
+    public ResType checkConvert(HashMap map) {
+
+        Integer uid = (Integer) map.get("uid");
+        String chain = (String) map.get("chain");
 
         if (chain==null) return new ResType(400,101);
 

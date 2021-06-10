@@ -16,5 +16,5 @@ public interface BookService {
 
     public ResType addBook(HashMap map);
 
-    public ResType checkConvert(String chain);
+    public ResType checkConvert(HashMap map);
 }

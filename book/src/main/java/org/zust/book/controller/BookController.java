@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zust.interfaceapi.dto.AdvertisementDto;
+import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.service.CommonService;
+import org.zust.interfaceapi.service.CommonUserService;
 import org.zust.interfaceapi.utils.ResType;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,11 +28,21 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+    @Reference(check = false)
+    private CommonUserService commonUserService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getBook(@RequestHeader("Authorization") String token,
                                      @PathVariable String id) {
-        ResType res = bookService.getBook(id);
+
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id",id);
+
+        ResType res = bookService.getBook(map);
         if (res.getStatus() == 200) {
             return ResponseEntity.ok(res.getData());
         }else {
@@ -42,8 +54,13 @@ public class BookController {
     public ResponseEntity<?> addBookShelf(@RequestHeader("Authorization") String token
                                         ,@PathVariable String id
                                          ,@RequestBody HashMap map) {
-        // 从token里解析出用户，再存入用户id
-        map.put("owner",1);
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
         map.put("bookshelf",Integer.parseInt(id));
         ResType res = bookService.addBook(map);
         if(res.getStatus()==200) {
@@ -56,7 +73,16 @@ public class BookController {
     public ResponseEntity<?> checkConvert(@RequestHeader("Authorization") String token,
                                           @PathVariable String id) {
 
-        ResType res = bookService.checkConvert(id);
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id",id);
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+
+        ResType res = bookService.checkConvert(map);
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }

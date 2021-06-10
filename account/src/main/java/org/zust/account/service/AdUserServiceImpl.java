@@ -17,10 +17,7 @@ import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @org.apache.dubbo.config.annotation.Service
@@ -96,10 +93,13 @@ public class AdUserServiceImpl implements AdUserService {
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
 
+
                 String bid = Integer.toString(t.getBook());
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("bid",bid);
                 Integer adid = t.getAdvertisement();
 
-                ResType book = bookService.getBook(bid);
+                ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
 
@@ -149,7 +149,9 @@ public class AdUserServiceImpl implements AdUserService {
 
                 Integer ownerId = t.getOwner();
 
-                ResType book = bookService.getBook(bid);
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("bid",bid);
+                ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(ownerId);
 

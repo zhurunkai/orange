@@ -24,6 +24,6 @@ public interface BookShelfService {
     public ResType getBookShelfById(String id);
 
 //  根据用户token获取书架列表
-    public ResType getBookShelfLists(String Token);
+    public ResType getBookShelfLists(Integer uid);
 
 }
