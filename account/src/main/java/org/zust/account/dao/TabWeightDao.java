@@ -6,6 +6,5 @@ import org.zust.account.entity.TabWeightEntity;
 import java.util.List;
 
 public interface TabWeightDao extends JpaRepository<TabWeightEntity,Integer> {
-    public List<TabWeightEntity> findTagsByBuId(int id);
-
+    List<TabWeightEntity> findByUser(Integer User);
 }

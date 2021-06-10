@@ -1,9 +1,12 @@
 package org.zust.recommend.controller;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.zust.interfaceapi.service.CommonUserService;
 import org.zust.interfaceapi.service.RecommendService;
+import org.zust.interfaceapi.utils.ResType;
 
 import java.util.List;
 
@@ -12,9 +15,15 @@ import java.util.List;
 public class RecommendController {
     @Autowired
     private RecommendService recommendService;
-
+    @Reference(check = false)
+    private CommonUserService commonUserService;
     @GetMapping("/user/{id}")
-    public ResponseEntity<?> userBasedCF(@PathVariable String id) {
+    public ResponseEntity<?> userBasedCF(@RequestHeader("Authorization") String token, @PathVariable String id) {
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
         Integer intId;
         try {
             intId = Integer.parseInt(id);
