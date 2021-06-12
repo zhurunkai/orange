@@ -22,6 +22,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("/book/shelf")
+@CrossOrigin
 public class BookShelfController {
 
     @Autowired

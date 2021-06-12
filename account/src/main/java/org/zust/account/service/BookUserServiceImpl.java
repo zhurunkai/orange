@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.BookUserDao;
 import org.zust.account.dao.SaltDao;
+import org.zust.account.dao.TabDao;
 import org.zust.account.dao.TabWeightDao;
 import org.zust.account.entity.BookUserEntity;
 import org.zust.account.entity.SaltEntity;
@@ -17,10 +18,7 @@ import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.utils.ResType;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @org.apache.dubbo.config.annotation.Service
@@ -33,6 +31,9 @@ public class BookUserServiceImpl implements BookUserService {
 
     @Autowired
     private TabWeightDao tabWeightDao;
+
+    @Autowired
+    private TabDao tabDao;
 
 
 
@@ -102,15 +103,27 @@ public class BookUserServiceImpl implements BookUserService {
 
     @Override
     public ResType findTabsByBuid(int id) {
-        List <TabWeightEntity> tabWeightEntities = tabWeightDao.findAllByUser(id);
-        List <TabEntity> tabEntities = new ArrayList<>();
-        for(TabWeightEntity t :tabWeightEntities){
-           int tag =t.getTab();
 
-
+        try {
+            List <TabWeightEntity> tabWeightEntities = tabWeightDao.findAllByUser(id);
+            HashMap<Integer, String> map = new HashMap<>();
+            for(TabWeightEntity t :tabWeightEntities){
+                int tag =t.getTab();
+                TabEntity tabEntity = tabDao.findById(tag).orElse(null);
+//                tags.add(tabEntity.getName());
+                map.put(tag,tabEntity.getName());
+            }
+            return new ResType(map);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
         }
 
 
+    }
+
+    @Override
+    public ResType chooseTags(int id) {
         return null;
     }
 

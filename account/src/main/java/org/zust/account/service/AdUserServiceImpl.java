@@ -38,7 +38,6 @@ public class AdUserServiceImpl implements AdUserService {
     @Autowired
     private AdUserDao adUserDao;
 
-
     @Autowired
     private ThrowRecordsDao throwRecordsDao;
 
@@ -96,12 +95,16 @@ public class AdUserServiceImpl implements AdUserService {
 
                 String bid = Integer.toString(t.getBook());
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("bid",bid);
+                map.put("id",bid);
                 Integer adid = t.getAdvertisement();
+
+                System.out.println(adid);
 
                 ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
+
+                System.out.println(book);
 
 
 
@@ -150,7 +153,7 @@ public class AdUserServiceImpl implements AdUserService {
                 Integer ownerId = t.getOwner();
 
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("bid",bid);
+                map.put("id",bid);
                 ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(ownerId);

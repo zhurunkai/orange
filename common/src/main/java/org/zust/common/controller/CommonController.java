@@ -14,6 +14,7 @@ import org.zust.interfaceapi.utils.ResType;
 
 @RestController
 @RequestMapping("/")
+@CrossOrigin
 public class CommonController {
     @Autowired
     CommonService commonService;

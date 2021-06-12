@@ -12,8 +12,10 @@ import org.zust.interfaceapi.utils.ResType;
 
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/account")
+@CrossOrigin
 public class BookUserController {
 
     @Autowired
@@ -65,6 +67,20 @@ public class BookUserController {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
         }
         ResType res = bookUserService.findTabsByBuid(Integer.parseInt(id));
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
+
+    //用户选择标签
+    @PostMapping("/book/{id}/tabs")
+    public  ResponseEntity<?>  chooseTabs(@RequestHeader("Authorization") String token,@PathVariable String id){
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        ResType res = bookUserService.chooseTags(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }
