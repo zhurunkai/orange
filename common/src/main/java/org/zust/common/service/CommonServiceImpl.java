@@ -23,7 +23,8 @@ public class CommonServiceImpl implements CommonService {
         }
 
         String fileName = file.getOriginalFilename();
-        String filePath = "D://cs/";
+//        String filePath = "D://cs/";
+        String filePath = "/users/k/documents/cs/";
         Integer random = (int) (Math.random() * 10000);
         String trueFile =filePath + fileName;
         File dest = new File(filePath + random+ new Date().getTime() + fileName);

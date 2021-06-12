@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recommend")
+@CrossOrigin
 public class RecommendController {
     @Autowired
     private RecommendService recommendService;
@@ -23,7 +24,6 @@ public class RecommendController {
         if(tokenRes.getStatus()!=200) {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
         }
-
         Integer intId;
         try {
             intId = Integer.parseInt(id);

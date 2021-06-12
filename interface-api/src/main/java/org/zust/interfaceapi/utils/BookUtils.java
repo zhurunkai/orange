@@ -47,13 +47,14 @@ public class BookUtils {
             Book book = reader.readEpub(in);
             //获取到书本的头部信息
             Metadata metadata = book.getMetadata();
-
+            String newCoverId = metadata.getMetaAttribute("cover");
             System.out.println("FirstTitle为：" + metadata.getFirstTitle());
             //获取到书本的全部资源
             Resources resources = book.getResources();
 
             Map jk = resources.getResourceMap();
             Resource r = (Resource) jk.get("images/calibre_cover.jpg");
+//            Resource r = (Resource) jk.get("images/calibre_cover.jpg");
             InputStream inn = r.getInputStream();
 
             FileUtil.copyInputStreamToFile(inn,new File("D:/book/convert"+fname+"_cover.jpg"));
