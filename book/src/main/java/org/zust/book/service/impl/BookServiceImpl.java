@@ -105,10 +105,10 @@ public class BookServiceImpl implements BookService {
                 BookChain chainSave = chainRepository.save(bookChain);
 
                 // 将.mobi等格式的文件转换为.epub格式
-                if (origin_ext.equals(".mobi")){
+                if (origin_ext.equals(".mobi") || origin_ext.equals(".txt")){
                     String fileName = (String) downloader.get("fileName");
                     // 默认转化的文件夹为convert
-                    BookUtils.convert("D:/book/download" + fileName +".mobi", "D:/book/convert" + fileName + ".epub");
+                    BookUtils.convert("D:/book/download" + fileName +origin_ext, "D:/book/convert" + fileName + ".epub");
                 }else if (origin_ext.equals(".epub")){
                     book.setConvertStatus(1);
                     book.setEpubUrl(origin_url);
@@ -124,9 +124,6 @@ public class BookServiceImpl implements BookService {
                     bookRepository.save(book);
                     bookChain.setCover(coverUrl);
                     chainRepository.save(bookChain);
-                    
-                }else if (origin_ext.equals(".txt")){
-
                 }
 
                 if (chainSave!=null) return new ResType(e2d(chainSave,bookSave,owner));
