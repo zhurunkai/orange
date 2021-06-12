@@ -105,6 +105,24 @@ public class BookShelfController {
         return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBookShelf(@RequestHeader("Authorization") String token,
+                                             @PathVariable String id) {
 
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+
+        map.put("bsid",id);
+        ResType res = bookShelfService.deleteBookShelfById(map);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+    }
 
 }

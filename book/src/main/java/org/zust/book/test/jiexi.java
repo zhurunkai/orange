@@ -19,25 +19,32 @@ public class jiexi {
 
     public static void main(String[] args) {
 
-        File file = new File("D:/book/convert/cnvs_vpl_bible.epub");
+        File file = new File("C:/Users/12113/Desktop/13.epub");
         InputStream in = null;
         try {
             //从输入流当中读取epub格式文件
             EpubReader reader = new EpubReader();
             in = new FileInputStream(file);
             Book book = reader.readEpub(in);
+            Resource coverImage = book.getCoverImage();
             //获取到书本的头部信息
             Metadata metadata = book.getMetadata();
-
+//            System.out.println(metadata.getMetaAttribute("cover"));
+            String coverId = metadata.getMetaAttribute("cover");
             System.out.println("FirstTitle为：" + metadata.getFirstTitle());
             //获取到书本的全部资源
             Resources resources = book.getResources();
-
+            Resource newCoverR = null;
             Map jk = resources.getResourceMap();
-            Resource df = (Resource) jk.get("images/calibre_cover.jpg");
-            InputStream inn = df.getInputStream();
+            for (Object o : jk.keySet()) {
+                if(coverId.equals(((Resource)jk.get(o)).getId())) {
+                    newCoverR = (Resource)jk.get(o);
+                    break;
+                }
+            }
+            InputStream inn = coverImage.getInputStream();
 
-            FileUtil.copyInputStreamToFile(inn,new File("D:/book/convert/calibre_cover.jpg"));
+            FileUtil.copyInputStreamToFile(inn,new File("D:/book/convert/111_cover.jpg"));
 
             System.out.println("所有资源数量为：" + resources.size());
             //获取所有的资源数据

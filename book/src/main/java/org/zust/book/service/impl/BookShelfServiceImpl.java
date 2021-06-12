@@ -5,7 +5,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.book.entity.Book;
+import org.zust.book.entity.BookChain;
 import org.zust.book.entity.BookShelf;
+import org.zust.book.repository.BookChainRepository;
 import org.zust.book.repository.BookShelfRepository;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
@@ -16,6 +18,7 @@ import org.zust.interfaceapi.utils.ResType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author: Linxy
@@ -30,6 +33,8 @@ public class BookShelfServiceImpl implements BookShelfService {
     private BookUserService bookUserService;
     @Autowired
     private BookShelfRepository bookShelfRepository;
+    @Autowired
+    private BookChainRepository chainRepository;
 
     @Override
     public ResType addBookShelf(HashMap map) {
@@ -60,12 +65,24 @@ public class BookShelfServiceImpl implements BookShelfService {
     @Override
     public ResType deleteBookShelfById(HashMap map) {
 
-        Integer bsid = (Integer) map.get("bsid");
+        String bsid = (String) map.get("bsid");
+        Integer owner = (Integer) map.get("owner");
 
-        BookShelf bookShelf = bookShelfRepository.findById(bsid).orElse(null);
+        BookShelf defaultShelf = bookShelfRepository.findByDefaultShelf(owner);
+        BookShelf targetShelf = bookShelfRepository.findById(Integer.parseInt(bsid)).orElse(null);
+        if (targetShelf==null) return new ResType(400,102);
 
-
-        return null;
+        // 默认书架不允许删除
+        if (targetShelf.equals(defaultShelf)) return new ResType(400,110);
+        List<BookChain> bookChain = chainRepository.findAllByShelf(targetShelf.getId());
+        // 将待删除目录下的书添加到默认书架中
+        for (BookChain chain : bookChain) {
+            chain.setShelf(defaultShelf.getId());
+            chainRepository.save(chain);
+        }
+        // 最后再删除待删除的数据
+        bookShelfRepository.delete(targetShelf);
+        return new ResType(200);
     }
 
     @Override

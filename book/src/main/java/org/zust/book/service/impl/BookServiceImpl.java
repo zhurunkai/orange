@@ -51,7 +51,6 @@ public class BookServiceImpl implements BookService {
     public ResType getBook(HashMap map) {
 
         String id = (String) map.get("id");
-
         if (id==null) return new ResType(400,101);
 
         try {
@@ -110,6 +109,22 @@ public class BookServiceImpl implements BookService {
                     String fileName = (String) downloader.get("fileName");
                     // 默认转化的文件夹为convert
                     BookUtils.convert("D:/book/download" + fileName +".mobi", "D:/book/convert" + fileName + ".epub");
+                }else if (origin_ext.equals(".epub")){
+//                    book.setConvertStatus(1);
+//                    book.setEpubUrl(origin_url);
+                    String fileName = (String) downloader.get("fileName");
+                    System.out.println("file = "+fileName);
+                    File file = new File("D:/book/download"+fileName+".epub");
+//                    BookUtils.getEpub(file,fname[0]);
+//                    String coverName = fname[0] + "_cover.jpg";
+//                    String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
+
+                    // 封面上传成功
+//                    book.setCover(coverUrl);
+//                    bookRepository.save(book);
+//                    bookChain.setCover(coverUrl);
+//                    chainRepository.save(bookChain);
+
                 }
 
                 if (chainSave!=null) return new ResType(e2d(chainSave,bookSave,owner));
@@ -164,7 +179,6 @@ public class BookServiceImpl implements BookService {
 
                     // 取出封面图
                     BookUtils.getEpub(file,fname[0]);
-
                     String coverName = fname[0] + "_cover.jpg";
                     String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
                     if (coverUrl.equals(500)) return new ResType(500,107);

@@ -45,20 +45,22 @@ public class BookUtils {
             EpubReader reader = new EpubReader();
             in = new FileInputStream(file);
             Book book = reader.readEpub(in);
+            Resource coverImage = book.getCoverImage();
             //获取到书本的头部信息
-            Metadata metadata = book.getMetadata();
+//            Metadata metadata = book.getMetadata();
 
-            System.out.println("FirstTitle为：" + metadata.getFirstTitle());
+//            System.out.println("FirstTitle为：" + metadata.getFirstTitle());
             //获取到书本的全部资源
-            Resources resources = book.getResources();
+//            Resources resources = book.getResources();
 
-            Map jk = resources.getResourceMap();
-            Resource r = (Resource) jk.get("images/calibre_cover.jpg");
-            InputStream inn = r.getInputStream();
+//            Map jk = resources.getResourceMap();
+//            Resource r = (Resource) jk.get("images/calibre_cover.jpg");
+            InputStream inn = coverImage.getInputStream();
 
             FileUtil.copyInputStreamToFile(inn,new File("D:/book/convert"+fname+"_cover.jpg"));
 
 //            System.out.println("所有资源数量为：" + resources.size());
+            /*
             //获取所有的资源数据
             Collection<String> allHrefs = resources.getAllHrefs();
             for (String href : allHrefs) {
@@ -98,6 +100,8 @@ public class BookUtils {
                     //获取子目录的内容
                 }
             }
+
+             */
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
