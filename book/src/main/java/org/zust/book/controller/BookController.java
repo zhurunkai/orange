@@ -71,7 +71,8 @@ public class BookController {
 
     @GetMapping("/shelf/{sid}/chain/{cid}/origin")
     public ResponseEntity<?> checkConvert(@RequestHeader("Authorization") String token,
-                                          @PathVariable String sid,String cid) {
+                                          @PathVariable String sid,
+                                          @PathVariable String cid) {
 
         ResType tokenRes = commonUserService.checkToken(token);
         if(tokenRes.getStatus()!=200) {

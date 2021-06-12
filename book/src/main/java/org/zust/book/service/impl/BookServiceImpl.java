@@ -73,6 +73,7 @@ public class BookServiceImpl implements BookService {
         String name = (String) map.get("name");
         Integer owner = (Integer) map.get("owner");
         Integer bookshelf = (Integer) map.get("bookshelf");
+        String cover = (String) map.get("cover");
 
         // 拿到文件的后缀名
         String origin_ext = origin_url.substring(origin_url.lastIndexOf(".")).toLowerCase();
@@ -93,6 +94,7 @@ public class BookServiceImpl implements BookService {
                 book.setOriginUrl(origin_url);
                 book.setOriginExt(origin_ext);
                 book.setConvertStatus(0);
+                if (cover!=null) book.setCover(cover);
                 Book bookSave = bookRepository.save(book);
 
                 BookChain bookChain = new BookChain();
@@ -102,19 +104,20 @@ public class BookServiceImpl implements BookService {
                 bookChain.setAlive(1);
                 bookChain.setShelf(bookshelf);
                 bookChain.setProcess(0);
+                if (cover!=null) bookChain.setCover(cover);
                 BookChain chainSave = chainRepository.save(bookChain);
 
+                // 转格式
                 // 将.mobi等格式的文件转换为.epub格式
-                if (origin_ext.equals(".mobi") || origin_ext.equals(".txt")){
+                if (origin_ext.equals(".mobi") || origin_ext.equals(".azw3") || origin_ext.equals(".txt")){
                     String fileName = (String) downloader.get("fileName");
                     // 默认转化的文件夹为convert
-                    BookUtils.convert("D:/book/download" + fileName +origin_ext, "D:/book/convert" + fileName + ".epub");
+                    boolean convert = BookUtils.convert("D:/book/download" + fileName + origin_ext, "D:/book/convert" + fileName + ".epub");
                 }else if (origin_ext.equals(".epub")){
                     book.setConvertStatus(1);
                     book.setEpubUrl(origin_url);
                     String fileName = (String) downloader.get("fileName");
-                    System.out.println("file = "+fileName);
-                    File file = new File("D:/book/download"+fileName+".epub");
+                    File file = new File("D:/book/download"+fileName+origin_ext);
                     BookUtils.getEpub(file,fileName);
                     String coverName = fileName + "_cover.jpg";
                     String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
@@ -124,6 +127,10 @@ public class BookServiceImpl implements BookService {
                     bookRepository.save(book);
                     bookChain.setCover(coverUrl);
                     chainRepository.save(bookChain);
+                }else if (origin_ext.equals(".pdf")){
+                    book.setConvertStatus(1);
+                    book.setEpubUrl(origin_url);
+                    bookRepository.save(book);
                 }
 
                 if (chainSave!=null) return new ResType(e2d(chainSave,bookSave,owner));
@@ -147,7 +154,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public ResType checkConvert(HashMap map) {
 
-        Integer uid = (Integer) map.get("uid");
+        Integer uid = (Integer) map.get("owner");
         String chain = (String) map.get("chain");
 
         if (chain==null) return new ResType(400,101);
@@ -159,12 +166,12 @@ public class BookServiceImpl implements BookService {
                 Book book = bookRepository.findById(bookChain.getOrigin()).orElse(null);
                 String originUrl = book.getOriginUrl();
                 String fileName = originUrl.substring(originUrl.lastIndexOf("/"));
-//                System.out.println(fileName);
                 String[] fname = fileName.split("\\.");
-//                System.out.println("fileName = "+fname[0]);
 
                 String epubName = fname[0] + ".epub";
+                System.out.println(epubName);
                 File file = new File("D:/book/convert" + epubName);
+                System.out.println(file.exists());
                 if (file.exists()) {
                     if (book.getConvertStatus()==1) return new ResType(400,109);
 
@@ -177,6 +184,9 @@ public class BookServiceImpl implements BookService {
                     bookRepository.save(book);
 
                     // 取出封面图
+                    // 如果是txt格式，直接返回
+                    if (book.getOriginExt().equals(".txt")) return new ResType(e2d(bookChain,book,uid));
+
                     BookUtils.getEpub(file,fname[0]);
                     String coverName = fname[0] + "_cover.jpg";
                     String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
@@ -195,10 +205,9 @@ public class BookServiceImpl implements BookService {
                     return new ResType(400,108);
                 }
 
+            }else {
+                return new ResType(400,102);
             }
-
-            return new ResType(400,102);
-
 
         }catch (NumberFormatException e){
             return new ResType(400,105);
