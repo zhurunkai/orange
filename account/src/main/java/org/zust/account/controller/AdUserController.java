@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/account")
-@CrossOrigin
 public class AdUserController {
 
     @Autowired
