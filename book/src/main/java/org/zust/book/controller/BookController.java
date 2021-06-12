@@ -70,9 +70,20 @@ public class BookController {
     }
 
     @GetMapping("/shelf/{sid}/chain/{cid}/origin")
-    public ResponseEntity<?> checkConvert(@PathVariable String sid,@PathVariable String cid) {
+    public ResponseEntity<?> checkConvert(@RequestHeader("Authorization") String token,
+                                          @PathVariable String sid,String cid) {
 
-        ResType res = bookService.checkConvert(cid);
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+        map.put("chain",cid);
+
+        ResType res = bookService.checkConvert(map);
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }

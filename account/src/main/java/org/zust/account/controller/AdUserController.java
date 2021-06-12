@@ -14,7 +14,7 @@ import org.zust.interfaceapi.utils.ResType;
 import java.util.Map;
 
 
-@CrossOrigin
+
 @RestController
 @RequestMapping("/account")
 @CrossOrigin

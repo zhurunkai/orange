@@ -110,20 +110,22 @@ public class BookServiceImpl implements BookService {
                     // 默认转化的文件夹为convert
                     BookUtils.convert("D:/book/download" + fileName +".mobi", "D:/book/convert" + fileName + ".epub");
                 }else if (origin_ext.equals(".epub")){
-//                    book.setConvertStatus(1);
-//                    book.setEpubUrl(origin_url);
+                    book.setConvertStatus(1);
+                    book.setEpubUrl(origin_url);
                     String fileName = (String) downloader.get("fileName");
                     System.out.println("file = "+fileName);
                     File file = new File("D:/book/download"+fileName+".epub");
-//                    BookUtils.getEpub(file,fname[0]);
-//                    String coverName = fname[0] + "_cover.jpg";
-//                    String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
+                    BookUtils.getEpub(file,fileName);
+                    String coverName = fileName + "_cover.jpg";
+                    String coverUrl = Upload.fileQcloud(new File("D:/book/convert" + coverName ), coverName);
 
                     // 封面上传成功
-//                    book.setCover(coverUrl);
-//                    bookRepository.save(book);
-//                    bookChain.setCover(coverUrl);
-//                    chainRepository.save(bookChain);
+                    book.setCover(coverUrl);
+                    bookRepository.save(book);
+                    bookChain.setCover(coverUrl);
+                    chainRepository.save(bookChain);
+                    
+                }else if (origin_ext.equals(".txt")){
 
                 }
 
