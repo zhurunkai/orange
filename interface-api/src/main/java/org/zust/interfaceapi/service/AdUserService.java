@@ -16,7 +16,7 @@ public interface AdUserService {
     public ResType getAd7DaysShowByAdUserId(Integer id);
     public ResType getAd7DaysNumsByAdUserId(Integer id);
     public ResType getAd7DaysCostByAdUserId(Integer id);
-
+    public ResType getAdBuserTabWeights(Integer id);
 
 
 }
