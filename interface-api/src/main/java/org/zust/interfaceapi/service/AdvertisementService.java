@@ -11,7 +11,6 @@ public interface AdvertisementService {
     public ResType changeAdvertisementStatus(Integer id,String status);
     public ResType getAdvertisementThrow(Integer id);
     public ResType getAdvertisementByTabId(Integer tabId);
-
-
+    public ResType getAdvertisementByAdUser(Integer adUserId);
 
 }

@@ -123,6 +123,17 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
 
     }
+
+    // 根据广告主id获得广告信息
+    public ResType getAdvertisementByAdUser(Integer adUserId) {
+        try {
+            List<AdvertisementEntity> advertisementEntities = advertisementDao.findByOwner(adUserId);
+            return new ResType(advertisementEntities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
 }
 
 
