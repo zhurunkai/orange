@@ -130,19 +130,26 @@ public class BookUserServiceImpl implements BookUserService {
     @Override
     public ResType chooseTags(int id,Map param) {
         try{
-            ResType tagId =tabService.findTagIdByName(param);
-//            System.out.println(tagId);
-//            System.out.println(id);
-            ArrayList data = (ArrayList) tagId.getData();
+            ResType tag =tabService.findTagIdByName(param);
+            ArrayList data = (ArrayList) tag.getData();
             ArrayList allData =new ArrayList();
             for (Object datum : data) {
                 Integer weight =100;
-//                System.out.println(datum);
                 TabWeightEntity tabWeightEntity = new TabWeightEntity(id, (Integer) datum,weight);
-                System.out.println(tabWeightEntity);
+//                System.out.println(tabWeightEntity);
                 TabWeightEntity save = tabWeightDao.save(tabWeightEntity);
-                System.out.println(save);
-                allData.add(e2d(save));
+//                System.out.println(save);
+                ResType bookuser = findBookUserAllInformById(id);
+                ResType tags = findTabById((Integer) datum);
+
+                BookUserDto bookUserDto = (BookUserDto) bookuser.getData();
+                TabDto tabDto = (TabDto) tags.getData();
+
+                TabWeightDto tabWeightDto = e2d(save);
+                tabWeightDto.setUser(bookUserDto);
+                tabWeightDto.setTab(tabDto);
+
+                allData.add(tabWeightDto);
 
             }
 //            System.out.println(allData);
