@@ -16,6 +16,7 @@ import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
+import org.zust.interfaceapi.utils.Utils;
 
 import java.util.*;
 
@@ -195,10 +196,55 @@ public class AdUserServiceImpl implements AdUserService {
     // 某广告主所有广告最近7天每天的点击数
     public ResType getAd7DaysClickByAdUserId(Integer id) {
         try {
-
+            List<Map<String,Integer>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysClickNums(1,startTime,endTime));
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
-            return
+            return new ResType(500,101);
+        }
+    }
+    // 某广告主所有广告最近7天每天的投放次数
+    public ResType getAd7DaysNumsByAdUserId(Integer id) {
+        try {
+            List<Map<String,Integer>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysNums(1,startTime,endTime));
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
+    // 某广告主所有广告最近7天每天的查看数
+    public ResType getAd7DaysShowByAdUserId(Integer id) {
+        try {
+            List<Map<String,Integer>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysShowNums(1,startTime,endTime));
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
         }
     }
 }
