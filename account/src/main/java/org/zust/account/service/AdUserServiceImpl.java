@@ -305,27 +305,36 @@ public class AdUserServiceImpl implements AdUserService {
     }
 
     // 获取某位广告主所有广告投放到的读书人的标签权重和
-//    public ResType getAdBuserTabWeights(Integer id) {
-//        try {
-//            List<ThrowRecordsEntity> throwRecordsEntities = throwRecordsDao.findThrowByAd(id);
-//            for (ThrowRecordsEntity throwRecordsEntity : throwRecordsEntities) {
-//                if("查看".equals(throwRecordsEntity.getType())) {
-//
-//                } else if("点击".equals(throwRecordsEntity.getType())) {
-//
-//                }
-//            }
-//            System.out.println(a);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    private ResType calcBuserWeight(Integer buserId) {
-//        if(bookUserService.findTabWeightByBuid(buserId).getStatus()==200) {
-//            List<TabWeightDto> tabWeightDtos = (List<TabWeightDto>) bookUserService.findTabWeightByBuid(buserId).getData();
-//
-//        }
-//    }
+    public ResType getAdBuserTabWeights(Integer id) {
+        try {
+            Map<String,Integer> weightMap = new HashMap<>();
+            List<ThrowRecordsEntity> throwRecordsEntities = throwRecordsDao.findThrowByAd(id);
+            for (ThrowRecordsEntity throwRecordsEntity : throwRecordsEntities) {
+                ResType res = calcBuserWeight(id,weightMap);
+                if(res.getStatus()==200) {
+                    weightMap = (Map<String, Integer>) res.getData();
+                }
+            }
+            return new ResType(weightMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
+
+    private ResType calcBuserWeight(Integer buserId,Map<String,Integer> map) {
+        ResType findRes = bookUserService.findTabWeightByBuid(buserId);
+        if(findRes.getStatus()==200) {
+            List<TabWeightDto> tabWeightDtos = (List<TabWeightDto>) findRes.getData();
+            for (TabWeightDto tabWeightDto : tabWeightDtos) {
+                if(map.keySet().contains(tabWeightDto.getTab().getName())) {
+                    map.put(tabWeightDto.getTab().getName(),map.get(tabWeightDto.getTab().getName())+tabWeightDto.getWeight());
+                } else {
+                    map.put(tabWeightDto.getTab().getName(),tabWeightDto.getWeight());
+                }
+            }
+            return new ResType(map);
+        }
+        return new ResType(500,108);
+    }
 }

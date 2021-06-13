@@ -10,6 +10,7 @@ import org.zust.advertisement.dao.AdTabDao;
 import org.zust.advertisement.dao.AdvertisementDao;
 import org.zust.advertisement.entity.AdTabEntity;
 import org.zust.advertisement.entity.AdvertisementEntity;
+import org.zust.interfaceapi.dto.AdUserDto;
 import org.zust.interfaceapi.dto.ThrowRecordsDto;
 import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
@@ -103,6 +104,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public AdvertisementDto e2d(AdvertisementEntity advertisementEntity) {
         AdvertisementDto advertisementDto = new AdvertisementDto();
         BeanUtils.copyProperties(advertisementEntity, advertisementDto);
+        advertisementDto.setOwner((AdUserDto) (adUserService.findAdUserAllInformById(advertisementEntity.getOwner()).getData()));
         return advertisementDto;
     }
 
@@ -127,8 +129,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     // 根据广告主id获得广告信息
     public ResType getAdvertisementByAdUser(Integer adUserId) {
         try {
+            List<AdvertisementDto> advertisementDtos = new ArrayList<>();
             List<AdvertisementEntity> advertisementEntities = advertisementDao.findByOwner(adUserId);
-            return new ResType(advertisementEntities);
+            for (AdvertisementEntity advertisementEntity : advertisementEntities) {
+                advertisementDtos.add(e2d(advertisementEntity));
+            }
+            return new ResType(advertisementDtos);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(500,101);
