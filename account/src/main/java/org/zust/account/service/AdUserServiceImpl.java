@@ -183,7 +183,11 @@ public class AdUserServiceImpl implements AdUserService {
     public ResType findAdsByAuId(int id) {
         try{
 
-
+         ResType ad = advertisementService.getAdvertisementByAdUser(id);
+         if(ad.getStatus()==200) {
+             return new ResType(ad.getData());
+         }
+         return new ResType(500,101);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -191,7 +195,6 @@ public class AdUserServiceImpl implements AdUserService {
         }
 
 
-        return null;
     }
 
     private AdUserDto e2d(AdUserEntity adUserEntity) {

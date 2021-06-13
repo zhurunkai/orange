@@ -88,6 +88,8 @@ public class AdUserController {
         }
         ResType res = adUserService.findAdsByAuId(Integer.parseInt(id));
         if(res.getStatus()==200) {
+            System.out.println(res.getData());
+            System.out.println(res);
             return ResponseEntity.ok(res.getData());
         }
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
@@ -148,18 +150,18 @@ public class AdUserController {
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
     }
 
-    @GetMapping("/ad/{id}/throw/buser/tab")
-    public ResponseEntity<?> getAdBuserTabWeights(@RequestHeader("Authorization") String token, @PathVariable String id){
-        ResType tokenRes = commonUserService.checkToken(token);
-        if(tokenRes.getStatus()!=200) {
-            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
-        }
-        ResType res = adUserService.getAdBuserTabWeights(Integer.parseInt(id));
-        if(res.getStatus()==200) {
-            return ResponseEntity.ok(res.getData());
-        }
-        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
-    }
+//    @GetMapping("/ad/{id}/throw/buser/tab")
+//    public ResponseEntity<?> getAdBuserTabWeights(@RequestHeader("Authorization") String token, @PathVariable String id){
+//        ResType tokenRes = commonUserService.checkToken(token);
+//        if(tokenRes.getStatus()!=200) {
+//            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+//        }
+//        ResType res = adUserService.getAdBuserTabWeights(Integer.parseInt(id));
+//        if(res.getStatus()==200) {
+//            return ResponseEntity.ok(res.getData());
+//        }
+//        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+//    }
 
 
 }
