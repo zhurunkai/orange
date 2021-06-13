@@ -8,4 +8,5 @@ import java.util.Map;
 public interface TabService {
     public ResType changeWeight(List list);
     public ResType findTagIdByName(Map param);
+    public ResType findtagNameById(Map param);
 }

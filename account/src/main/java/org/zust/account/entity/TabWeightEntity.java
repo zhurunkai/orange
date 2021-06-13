@@ -23,4 +23,10 @@ public class TabWeightEntity {
     @Column(name="weight")
     private Integer weight;
 
+
+    public TabWeightEntity(Integer user, Integer tab, Integer weight) {
+        this.user = user;
+        this.tab = tab;
+        this.weight = weight;
+    }
 }

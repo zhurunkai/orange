@@ -94,19 +94,18 @@ public class AdUserServiceImpl implements AdUserService {
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
 
-
                 String bid = Integer.toString(t.getBook());
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("id",bid);
                 Integer adid = t.getAdvertisement();
 
-                System.out.println(adid);
+                //System.out.println(adid);
 
                 ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
 
-                System.out.println(book);
+                //System.out.println(book);
 
 
 
@@ -114,7 +113,7 @@ public class AdUserServiceImpl implements AdUserService {
 //                bookDto.setOwner();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
-                System.out.println(adUserDto);
+                //System.out.println(adUserDto);
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
@@ -176,6 +175,21 @@ public class AdUserServiceImpl implements AdUserService {
             e.printStackTrace();
             return new ResType(500,101);
         }
+    }
+
+    @Override
+    public ResType findAdsByAuId(int id) {
+        try{
+
+
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+
+
+        return null;
     }
 
     private AdUserDto e2d(AdUserEntity adUserEntity) {
