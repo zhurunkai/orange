@@ -18,7 +18,7 @@ import java.util.HashMap;
  * @function:
  **/
 @RestController
-@RequestMapping("/book/shelf/chain")
+@RequestMapping("/book/shelf")
 public class BookChainController {
 
     @Reference(check = false)
@@ -28,7 +28,8 @@ public class BookChainController {
 
     @GetMapping("/{sid}/chain/{cid}")
     public ResponseEntity<?> getBookChainById(@RequestHeader("Authorization") String token,
-                                              @PathVariable String sid,String cid) {
+                                              @PathVariable String sid,
+                                              @PathVariable String cid) {
 
         ResType tokenRes = commonUserService.checkToken(token);
         if(tokenRes.getStatus()!=200) {
@@ -50,6 +51,78 @@ public class BookChainController {
 
     }
 
+    @PatchMapping("/{sid}/chain/{cid}/shelf")
+    public ResponseEntity<?> exchangeBookLocation(@RequestHeader("Authorization") String token,
+                                                  @PathVariable String sid,
+                                                  @PathVariable String cid,
+                                                  @RequestBody HashMap map) {
+
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+        map.put("sid",sid);
+        map.put("cid",cid);
+
+        ResType res = chainService.updateChainLocation(map);
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        }else {
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
+        }
+
+    }
+
+    @PutMapping("/{sid}/chain/{cid}")
+    public ResponseEntity<?> updateBookChain(@RequestHeader("Authorization") String token,
+                                                  @PathVariable String sid,
+                                                  @PathVariable String cid,
+                                                  @RequestBody HashMap map) {
+
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+        map.put("sid",sid);
+        map.put("cid",cid);
+
+        ResType res = chainService.updateChain(map);
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        }else {
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
+        }
+
+    }
+
+    @GetMapping("/{id}/chain")
+    public ResponseEntity<?> getAllChain(@RequestHeader("Authorization") String token,
+                                         @PathVariable String id) {
+
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+        map.put("id",id);
+
+        ResType res = chainService.getAllChain(map);
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        }else {
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
+        }
+
+    }
 
 
 }
