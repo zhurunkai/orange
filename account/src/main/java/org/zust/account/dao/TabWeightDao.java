@@ -8,4 +8,5 @@ import java.util.List;
 public interface TabWeightDao extends JpaRepository<TabWeightEntity,Integer> {
       List<TabWeightEntity> findAllByUser(Integer id);
 
+      TabWeightEntity findByUserAndTab(Integer uid,Integer tab);
 }

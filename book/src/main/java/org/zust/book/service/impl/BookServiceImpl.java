@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.zust.book.entity.Book;
 import org.zust.book.entity.BookChain;
 import org.zust.book.entity.BookShelf;
+import org.zust.book.entity.BookTag;
 import org.zust.book.repository.BookChainRepository;
 import org.zust.book.repository.BookRepository;
+import org.zust.book.repository.BookTagRepository;
 import org.zust.interfaceapi.dto.BookChainDto;
 import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
@@ -18,6 +20,7 @@ import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.service.CommonService;
+import org.zust.interfaceapi.service.TabService;
 import org.zust.interfaceapi.utils.BookUtils;
 import org.zust.interfaceapi.utils.FileUtil;
 import org.zust.interfaceapi.utils.ResType;
@@ -28,6 +31,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.acl.Owner;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -42,8 +46,12 @@ public class BookServiceImpl implements BookService {
 
     @Reference(check = false)
     private BookUserService bookUserService;
+    @Reference(check = false)
+    private TabService tabService;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private BookTagRepository bookTagRepository;
     @Autowired
     private BookChainRepository chainRepository;
 
@@ -88,6 +96,7 @@ public class BookServiceImpl implements BookService {
                 System.out.println("是否下载成功："+downloaderStatus);
 
                 // 下载成功，保存到数据库
+                // 存储book
                 Book book = new Book();
                 book.setName(name);
                 book.setOwner(owner);
@@ -97,6 +106,20 @@ public class BookServiceImpl implements BookService {
                 if (cover!=null) book.setCover(cover);
                 Book bookSave = bookRepository.save(book);
 
+                // 存储book对应的tag
+                ResType res = tabService.findTagIdByName(map);
+                if (res.getStatus()==400&&res.getCode()==103) return new ResType(400,103);
+                ArrayList data = (ArrayList) res.getData();
+                for (Object tag : data) {
+                    BookTag bookTag = new BookTag();
+                    bookTag.setBook(bookSave.getId());
+                    bookTag.setTab((Integer) tag);
+                    bookTagRepository.save(bookTag);
+                    // 如果用户没有此书的id，则在tag_weight上加上
+                    tabService.isTagExist(owner,bookTag.getTab());
+                }
+
+                // 存储bookChain
                 BookChain bookChain = new BookChain();
                 bookChain.setName(name);
                 bookChain.setOwner(owner);

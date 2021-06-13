@@ -9,4 +9,6 @@ import org.zust.account.entity.TabEntity;
 public interface TabDao extends JpaRepository<TabEntity,Integer> {
     @Query("SELECT t from TabEntity t where t.name=?1")
     TabEntity  findByName(String name);
+
+
 }

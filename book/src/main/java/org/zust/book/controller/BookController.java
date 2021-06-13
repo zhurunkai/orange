@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.dto.BookUserDto;
-import org.zust.interfaceapi.service.BookChainService;
-import org.zust.interfaceapi.service.BookService;
-import org.zust.interfaceapi.service.CommonService;
-import org.zust.interfaceapi.service.CommonUserService;
+import org.zust.interfaceapi.service.*;
 import org.zust.interfaceapi.utils.ResType;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -30,6 +27,8 @@ public class BookController {
 
     @Reference(check = false)
     private CommonUserService commonUserService;
+    @Reference(check = false)
+    private TabService tabService;
     @Autowired
     private BookService bookService;
     @Autowired
@@ -66,18 +65,12 @@ public class BookController {
         BookUserDto buser = (BookUserDto) tokenRes.getData();
         map.put("owner",buser.getId());
         map.put("bookshelf",Integer.parseInt(id));
-        ArrayList tabs = (ArrayList) map.get("tabs");
-        System.out.println("size ="+tabs.size());
-        for (Object tab : tabs) {
-            System.out.println(tab);
-        }
 
-        return null;
-//        ResType res = bookService.addBook(map);
-//        if(res.getStatus()==200) {
-//            return ResponseEntity.ok(res.getData());
-//        }
-//        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+        ResType res = bookService.addBook(map);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
 
     @GetMapping("/shelf/{sid}/chain/{cid}/origin")

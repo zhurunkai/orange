@@ -8,4 +8,5 @@ import java.util.Map;
 public interface TabService {
     public ResType changeWeight(List list);
     public ResType findTagIdByName(Map param);
+    public Boolean isTagExist(Integer uid,Integer tab);
 }
