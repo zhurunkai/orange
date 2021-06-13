@@ -15,6 +15,7 @@ import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.service.BookService;
+import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.utils.ResType;
 import org.zust.interfaceapi.utils.Utils;
 
@@ -25,7 +26,7 @@ import java.util.*;
 @org.apache.dubbo.config.annotation.Service
 public class AdUserServiceImpl implements AdUserService {
 
-//    @Reference
+    //    @Reference
 //    private BookService bookService;
 //
 //    @Reference
@@ -42,27 +43,29 @@ public class AdUserServiceImpl implements AdUserService {
 
     @Autowired
     private ThrowRecordsDao throwRecordsDao;
+    @Autowired
+    private BookUserService bookUserService;
 
 
     @Override
     public ResType lrAdUser(Map param) {
-        try{
+        try {
             String phone = (String) param.get("phone");
             AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
-            if(adUserEntity == null){
+            if (adUserEntity == null) {
                 Double money = 10000.00;
                 String randomName = RandomName.nameString();
                 String randomProfile = RandomProfile.profileString();
-                Double freeze =0.00;
-                String token1 = IdentifyingCode.md5(phone+new Date().getTime());
+                Double freeze = 0.00;
+                String token1 = IdentifyingCode.md5(phone + new Date().getTime());
 
-                AdUserEntity data =new AdUserEntity(money,phone,randomName,randomProfile,freeze,token1);
+                AdUserEntity data = new AdUserEntity(money, phone, randomName, randomProfile, freeze, token1);
                 AdUserEntity save = adUserDao.save(data);
 
                 return new ResType(e2d(save));
 
-            }else{
-                String token2 = IdentifyingCode.md5(phone+new Date().getTime());
+            } else {
+                String token2 = IdentifyingCode.md5(phone + new Date().getTime());
                 AdUserEntity adUserEntity1 = adUserDao.findByPhone(phone);
                 adUserEntity1.setToken(token2);
 
@@ -70,9 +73,9 @@ public class AdUserServiceImpl implements AdUserService {
                 AdUserEntity save = adUserDao.save(data);
                 return new ResType(e2d(adUserEntity1));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(400,107);
+            return new ResType(400, 107);
         }
     }
 
@@ -81,40 +84,38 @@ public class AdUserServiceImpl implements AdUserService {
         try {
             AdUserEntity ausere = adUserDao.findById(auId).orElse(null);
             return new ResType(e2d(ausere));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
 
     @Override
     public ResType findAdUserBillById(int id) {
-        try{
+        try {
             List<ThrowRecordsEntity> byOwner = throwRecordsDao.findByOwner(id);
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
 
-
                 String bid = Integer.toString(t.getBook());
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("id",bid);
+                map.put("id", bid);
                 Integer adid = t.getAdvertisement();
 
-                System.out.println(adid);
+                //System.out.println(adid);
 
                 ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
 
-                System.out.println(book);
-
+                //System.out.println(book);
 
 
                 BookDto bookDto = (BookDto) book.getData();
 //                bookDto.setOwner();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
-                System.out.println(adUserDto);
+                //System.out.println(adUserDto);
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
@@ -124,9 +125,9 @@ public class AdUserServiceImpl implements AdUserService {
                 list.add(throwRecordsDto);
             }
             return new ResType(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
 
@@ -143,7 +144,7 @@ public class AdUserServiceImpl implements AdUserService {
 //            resType.setData(data);
 //            resType.setStatus(200);
 //            return resType;
-        try{
+        try {
             List<ThrowRecordsEntity> byAdvertisement = throwRecordsDao.findByAdvertisement(id);
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byAdvertisement) {
@@ -155,7 +156,7 @@ public class AdUserServiceImpl implements AdUserService {
                 Integer ownerId = t.getOwner();
 
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("id",bid);
+                map.put("id", bid);
                 ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(ownerId);
@@ -172,26 +173,44 @@ public class AdUserServiceImpl implements AdUserService {
             }
 //            System.out.println(byOwner);
             return new ResType(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
 
+    @Override
+    public ResType findAdsByAuId(int id) {
+        try{
+
+         ResType ad = advertisementService.getAdvertisementByAdUser(id);
+         if(ad.getStatus()==200) {
+             return new ResType(ad.getData());
+         }
+         return new ResType(500,101);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+
+
+    }
+
     private AdUserDto e2d(AdUserEntity adUserEntity) {
-        if(adUserEntity==null)
+        if (adUserEntity == null)
             return null;
-        AdUserDto adUserDto=new AdUserDto();
-        BeanUtils.copyProperties(adUserEntity,adUserDto);
-        return  adUserDto;
+        AdUserDto adUserDto = new AdUserDto();
+        BeanUtils.copyProperties(adUserEntity, adUserDto);
+        return adUserDto;
     }
 
     private ThrowRecordsDto e2d(ThrowRecordsEntity throwRecordsEntity) {
-        if(throwRecordsEntity==null)
+        if (throwRecordsEntity == null)
             return null;
-        ThrowRecordsDto throwRecordsDto=new ThrowRecordsDto();
-        BeanUtils.copyProperties(throwRecordsEntity,throwRecordsDto);
-        return  throwRecordsDto;
+        ThrowRecordsDto throwRecordsDto = new ThrowRecordsDto();
+        BeanUtils.copyProperties(throwRecordsEntity, throwRecordsDto);
+        return throwRecordsDto;
     }
 
     // 某广告主所有广告最近7天每天的点击数
@@ -205,73 +224,75 @@ public class AdUserServiceImpl implements AdUserService {
 //    }
     public ResType getAd7DaysClickByAdUserId(Integer id) {
         try {
-            List<Map<String,Integer>> list = new ArrayList<>();
-            for(int i=1;i<8;i++) {
-                Map<String,Integer> map = new HashMap<>();
-                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
-                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
-                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysClickNums(1,startTime,endTime));
+            List<Map<String, Integer>> list = new ArrayList<>();
+            for (int i = 1; i < 8; i++) {
+                Map<String, Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0, new Date(), i);
+                Date endTime = Utils.getBeforeKDay0Date(1, new Date(), i);
+                map.put((startTime.getMonth() + 1) + "." + startTime.getDate(), throwRecordsDao.get7DaysClickNums(1, startTime, endTime));
                 list.add(map);
             }
             Collections.reverse(list);
             return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
+
     // 某广告主所有广告最近7天每天的投放次数
     public ResType getAd7DaysNumsByAdUserId(Integer id) {
         try {
-            List<Map<String,Integer>> list = new ArrayList<>();
-            for(int i=1;i<8;i++) {
-                Map<String,Integer> map = new HashMap<>();
-                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
-                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
-                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysNums(1,startTime,endTime));
+            List<Map<String, Integer>> list = new ArrayList<>();
+            for (int i = 1; i < 8; i++) {
+                Map<String, Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0, new Date(), i);
+                Date endTime = Utils.getBeforeKDay0Date(1, new Date(), i);
+                map.put((startTime.getMonth() + 1) + "." + startTime.getDate(), throwRecordsDao.get7DaysNums(1, startTime, endTime));
                 list.add(map);
             }
             Collections.reverse(list);
             return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
+
     // 某广告主所有广告最近7天每天的查看数
     public ResType getAd7DaysShowByAdUserId(Integer id) {
         try {
-            List<Map<String,Integer>> list = new ArrayList<>();
-            for(int i=1;i<8;i++) {
-                Map<String,Integer> map = new HashMap<>();
-                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
-                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
-                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysShowNums(1,startTime,endTime));
+            List<Map<String, Integer>> list = new ArrayList<>();
+            for (int i = 1; i < 8; i++) {
+                Map<String, Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0, new Date(), i);
+                Date endTime = Utils.getBeforeKDay0Date(1, new Date(), i);
+                map.put((startTime.getMonth() + 1) + "." + startTime.getDate(), throwRecordsDao.get7DaysShowNums(1, startTime, endTime));
                 list.add(map);
             }
             Collections.reverse(list);
             return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
 
     // 某广告主所有广告最近7天每天的扣费数
     public ResType getAd7DaysCostByAdUserId(Integer id) {
         try {
-            List<Map<String,Double>> list = new ArrayList<>();
-            for(int i=1;i<8;i++) {
-                Map<String,Double> map = new HashMap<>();
-                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
-                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+            List<Map<String, Double>> list = new ArrayList<>();
+            for (int i = 1; i < 8; i++) {
+                Map<String, Double> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0, new Date(), i);
+                Date endTime = Utils.getBeforeKDay0Date(1, new Date(), i);
                 System.out.println(startTime);
                 System.out.println(endTime);
-                Double cost = throwRecordsDao.get7DaysCostNums(1,startTime,endTime);
-                if(cost==null) {
+                Double cost = throwRecordsDao.get7DaysCostNums(1, startTime, endTime);
+                if (cost == null) {
                     cost = 0.0;
                 }
-                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),cost);
+                map.put((startTime.getMonth() + 1) + "." + startTime.getDate(), cost);
                 System.out.println(map);
                 list.add(map);
             }
@@ -279,7 +300,32 @@ public class AdUserServiceImpl implements AdUserService {
             return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
+
+    // 获取某位广告主所有广告投放到的读书人的标签权重和
+//    public ResType getAdBuserTabWeights(Integer id) {
+//        try {
+//            List<ThrowRecordsEntity> throwRecordsEntities = throwRecordsDao.findThrowByAd(id);
+//            for (ThrowRecordsEntity throwRecordsEntity : throwRecordsEntities) {
+//                if("查看".equals(throwRecordsEntity.getType())) {
+//
+//                } else if("点击".equals(throwRecordsEntity.getType())) {
+//
+//                }
+//            }
+//            System.out.println(a);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    private ResType calcBuserWeight(Integer buserId) {
+//        if(bookUserService.findTabWeightByBuid(buserId).getStatus()==200) {
+//            List<TabWeightDto> tabWeightDtos = (List<TabWeightDto>) bookUserService.findTabWeightByBuid(buserId).getData();
+//
+//        }
+//    }
 }

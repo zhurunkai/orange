@@ -11,11 +11,12 @@ public interface AdUserService {
     public ResType findAdUserAllInformById(int buId);
     public ResType findAdUserBillById(int id);
     public ResType findRecordsByAdId(int id);
+    public ResType findAdsByAuId(int id);
     public ResType getAd7DaysClickByAdUserId(Integer id);
     public ResType getAd7DaysShowByAdUserId(Integer id);
     public ResType getAd7DaysNumsByAdUserId(Integer id);
     public ResType getAd7DaysCostByAdUserId(Integer id);
-
+//    public ResType getAdBuserTabWeights(Integer id);
 
 
 }

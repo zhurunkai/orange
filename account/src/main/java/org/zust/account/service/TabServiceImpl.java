@@ -29,9 +29,10 @@ public class TabServiceImpl implements TabService {
         return null;
     }
 
+    //通过tag名找id
     @Override
-    public ResType findTagIdByName(Map param) {
-        ArrayList tabs = (ArrayList) param.get("tabs");
+    public ResType findTagIdByName(Map params) {
+        ArrayList tabs = (ArrayList) params.get("tabs");
         ArrayList nums = new ArrayList();
         //System.out.println("size ="+tabs.size());
         if(tabs == null){

@@ -18,6 +18,7 @@ import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.dto.TabDto;
 import org.zust.interfaceapi.dto.TabWeightDto;
 import org.zust.interfaceapi.service.BookUserService;
+import org.zust.interfaceapi.service.TabService;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.*;
@@ -36,6 +37,9 @@ public class BookUserServiceImpl implements BookUserService {
 
     @Autowired
     private TabDao tabDao;
+
+    @Autowired
+    TabService tabService;
 
 
     //读者登录所用验证码
@@ -124,8 +128,37 @@ public class BookUserServiceImpl implements BookUserService {
     }
 
     @Override
-    public ResType chooseTags(int id) {
-        return null;
+    public ResType chooseTags(int id,Map param) {
+        try{
+            ResType tag =tabService.findTagIdByName(param);
+            ArrayList data = (ArrayList) tag.getData();
+            ArrayList allData =new ArrayList();
+            for (Object datum : data) {
+                Integer weight =100;
+                TabWeightEntity tabWeightEntity = new TabWeightEntity(id, (Integer) datum,weight);
+//                System.out.println(tabWeightEntity);
+                TabWeightEntity save = tabWeightDao.save(tabWeightEntity);
+//                System.out.println(save);
+                ResType bookuser = findBookUserAllInformById(id);
+                ResType tags = findTabById((Integer) datum);
+
+                BookUserDto bookUserDto = (BookUserDto) bookuser.getData();
+                TabDto tabDto = (TabDto) tags.getData();
+
+                TabWeightDto tabWeightDto = e2d(save);
+                tabWeightDto.setUser(bookUserDto);
+                tabWeightDto.setTab(tabDto);
+
+                allData.add(tabWeightDto);
+
+            }
+//            System.out.println(allData);
+            return new ResType(allData);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  new ResType(500,103);
+        }
+
     }
 
     @Override
@@ -149,6 +182,14 @@ public class BookUserServiceImpl implements BookUserService {
         BookUserDto bookUserDto = new BookUserDto();
         BeanUtils.copyProperties(bookUserEntity, bookUserDto);
         return bookUserDto;
+    }
+
+    private TabWeightDto e2d(TabWeightEntity tabWeightEntity) {
+        if (tabWeightEntity == null)
+            return null;
+        TabWeightDto tabWeightDto = new TabWeightDto();
+        BeanUtils.copyProperties(tabWeightEntity, tabWeightDto);
+        return tabWeightDto;
     }
 
     private BookUserEntity d2e(BookUserDto bookUserDto) {

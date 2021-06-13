@@ -9,7 +9,7 @@ public interface BookUserService {
     public ResType lrBookUser(Map param);
     public ResType findBookUserAllInformById(int buId);
     public ResType findTabsByBuid(int id);
-    public ResType chooseTags(int id);
+    public ResType chooseTags(int id,Map param);
     public ResType findTabWeightByBuid(int id);
     public ResType findTabById(Integer id);
 }

@@ -75,12 +75,12 @@ public class BookUserController {
 
     //用户选择标签
     @PostMapping("/book/{id}/tabs")
-    public  ResponseEntity<?>  chooseTabs(@RequestHeader("Authorization") String token,@PathVariable String id){
+    public  ResponseEntity<?>  chooseTabs(@RequestHeader("Authorization") String token,@PathVariable String id,@RequestBody Map param){
         ResType tokenRes = commonUserService.checkToken(token);
         if(tokenRes.getStatus()!=200) {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
         }
-        ResType res = bookUserService.chooseTags(Integer.parseInt(id));
+        ResType res = bookUserService.chooseTags(Integer.parseInt(id),param);
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }
