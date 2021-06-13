@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.ThrowRecordsEntity;
+import org.zust.advertisement.dao.AdTabDao;
 import org.zust.advertisement.dao.AdvertisementDao;
+import org.zust.advertisement.entity.AdTabEntity;
 import org.zust.advertisement.entity.AdvertisementEntity;
 import org.zust.interfaceapi.dto.ThrowRecordsDto;
 import org.zust.interfaceapi.service.AdUserService;
@@ -27,6 +29,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Autowired
     AdvertisementDao advertisementDao;
+    @Autowired
+    AdTabDao adTabDao;
 
     @Reference(check = false)
     private AdUserService adUserService;
@@ -102,6 +106,23 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementDto;
     }
 
+    // 根据tabid获得所有广告id
+    @Override
+    public ResType getAdvertisementByTabId(Integer tabId) {
+        try {
+            List<AdTabEntity> adTabEntities = adTabDao.findByTab(tabId);
+            List<AdvertisementDto> advertisementDtos = new ArrayList<>();
+            for (AdTabEntity adTabEntity : adTabEntities) {
+                advertisementDtos.add((AdvertisementDto) getAdvertisement(adTabEntity.getAdvertisement()).getData());
+            }
+            return new ResType(advertisementDtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+
+
+    }
 }
 
 

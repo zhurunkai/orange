@@ -1,10 +1,12 @@
 package org.zust.recommend.service;
 
+import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.zust.interfaceapi.dto.BookChainDto;
-import org.zust.interfaceapi.dto.BookDto;
-import org.zust.interfaceapi.dto.BookShelfDto;
-import org.zust.interfaceapi.dto.BookUserDto;
+import org.zust.interfaceapi.dto.*;
+import org.zust.interfaceapi.service.AdUserService;
+import org.zust.interfaceapi.service.AdvertisementService;
+import org.zust.interfaceapi.service.BookUserService;
 import org.zust.interfaceapi.service.RecommendService;
 import org.zust.interfaceapi.utils.ResType;
 import org.zust.recommend.dto.BookId2BuserIdDto;
@@ -14,6 +16,74 @@ import java.util.*;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class RecommendServiceImpl implements RecommendService {
+    @Reference(check = false)
+    private BookUserService bookUserService;
+    @Reference(check = false)
+    private AdvertisementService advertisementService;
+
+    // 通过读书人id根据用户标签推荐投放的广告
+    public ResType adRecommendByUserTab(Integer id) {
+        try {
+            // 根据id获得用户标签权重信息
+            ResType userTabWeight = bookUserService.findTabWeightByBuid(id);
+            if(userTabWeight.getStatus()!=200) {
+                return userTabWeight;
+            }
+
+
+            List<TabWeightDto> tabWeightDtos = (List<TabWeightDto>)userTabWeight.getData();
+            Collections.sort(tabWeightDtos, new Comparator<TabWeightDto>() {
+                @Override
+                public int compare(TabWeightDto user1, TabWeightDto user2) {
+                    Integer id1 = user1.getWeight();
+                    Integer id2 = user2.getWeight();
+                    //可以按User对象的其他属性排序，只要属性支持compareTo方法
+                    return id2.compareTo(id1);
+                }
+            });
+//            for (TabWeightDto tabWeightDto : tabWeightDtos) {
+//                System.out.println(tabWeightDto);
+//            }
+            for (TabWeightDto tabWeightDto : tabWeightDtos) {
+                ResType res = advertisementService.getAdvertisementByTabId(tabWeightDto.getTab().getId());
+                if(res.getStatus()==200) {
+                    List<AdvertisementDto> advertisementDtos = (List<AdvertisementDto>) res.getData();
+                    for (AdvertisementDto advertisementDto : advertisementDtos) {
+                        // 判断一下钱是不是够用
+                        ResType checkBudgetRes = checkAdRecommendByBudget(advertisementDto);
+                        if(checkBudgetRes.getStatus()==200) {
+                            return new ResType(checkBudgetRes.getData());
+                        }
+                    }
+                }
+            }
+        return new ResType(500,109);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,110);
+        }
+    }
+    // 判断钱够不够用
+    public ResType checkAdRecommendByBudget(AdvertisementDto advertisementDto) {
+        try {
+            ResType res = advertisementService.getAdvertisementThrow(advertisementDto.getId());
+            if(res.getStatus()!=200) {
+                return new ResType(500,108);
+            }
+            List<ThrowRecordsDto> throwRecordsDtos = (List<ThrowRecordsDto>) res.getData();
+            Double cost = 0.0;
+            for (ThrowRecordsDto throwRecordsDto : throwRecordsDtos) {
+                cost+=throwRecordsDto.getCost();
+            }
+            if((advertisementDto.getBudget()-cost)<1.1) {
+                return new ResType(500,108);
+            }
+            return new ResType(advertisementDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
 
     // 基于用户的协同过滤算法
     public ResType userBasedCF(Integer id) {

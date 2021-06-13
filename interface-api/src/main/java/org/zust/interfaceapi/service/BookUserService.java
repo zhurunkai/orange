@@ -10,4 +10,6 @@ public interface BookUserService {
     public ResType findBookUserAllInformById(int buId);
     public ResType findTabsByBuid(int id);
     public ResType chooseTags(int id);
+    public ResType findTabWeightByBuid(int id);
+    public ResType findTabById(Integer id);
 }

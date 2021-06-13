@@ -191,4 +191,14 @@ public class AdUserServiceImpl implements AdUserService {
         BeanUtils.copyProperties(throwRecordsEntity,throwRecordsDto);
         return  throwRecordsDto;
     }
+
+    // 某广告主所有广告最近7天每天的点击数
+    public ResType getAd7DaysClickByAdUserId(Integer id) {
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return
+        }
+    }
 }
