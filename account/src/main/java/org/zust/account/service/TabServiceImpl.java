@@ -25,11 +25,13 @@ public class TabServiceImpl implements TabService {
 
 
     @Override
-    public ResType changeWeight(List list,Integer uid,Integer weight) {
-
-
-
-        return null;
+    public Boolean changeWeight(List list,Integer uid,Integer weight) {
+        for (Object o : list) {
+            TabWeightEntity tabWeight = tabWeightDao.findByUserAndTab(uid, (Integer) o);
+            tabWeight.setWeight(tabWeight.getWeight()+weight);
+            tabWeightDao.save(tabWeight);
+        }
+        return true;
     }
 
     //通过tag名找id
@@ -62,6 +64,23 @@ public class TabServiceImpl implements TabService {
         }
 
         return true;
+    }
+
+    //根据tagid找名字
+    @Override
+    public ResType findtagNameById(Map param) {
+        ArrayList nums = (ArrayList) param.get("id");
+        ArrayList tabs = new ArrayList();
+        //System.out.println("size ="+tabs.size());
+        if(nums == null){
+            return new ResType(400,103);
+        }
+        for (Object tab : tabs) {
+//            System.out.println(tab);
+            TabEntity tabEntity = tabDao.findById( (Integer) tab).orElse(null);
+            tabs.add(tabEntity.getName());
+        }
+        return new ResType(tabs);
     }
 
 
