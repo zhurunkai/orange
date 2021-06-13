@@ -21,7 +21,10 @@ public class TabServiceImpl implements TabService {
 
 
     @Override
-    public ResType changeWeight(List list) {
+    public ResType changeWeight(List list,Integer uid,Integer weight) {
+
+
+
         return null;
     }
 
