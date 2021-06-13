@@ -3,11 +3,13 @@ package org.zust.interfaceapi.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Utils {
     public static SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
     public static SimpleDateFormat format1 = new SimpleDateFormat(
             "yyyyMMdd HH:mm:ss");
+//    sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 
     // 获取某日当日零点或结束时刻Date
     public static Date getToday0Date(Integer type) {

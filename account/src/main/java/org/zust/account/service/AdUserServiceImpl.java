@@ -16,7 +16,9 @@ import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.utils.ResType;
+import org.zust.interfaceapi.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -201,4 +203,83 @@ public class AdUserServiceImpl implements AdUserService {
 //            return
 //        }
 //    }
+    public ResType getAd7DaysClickByAdUserId(Integer id) {
+        try {
+            List<Map<String,Integer>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysClickNums(1,startTime,endTime));
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
+    // 某广告主所有广告最近7天每天的投放次数
+    public ResType getAd7DaysNumsByAdUserId(Integer id) {
+        try {
+            List<Map<String,Integer>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysNums(1,startTime,endTime));
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
+    // 某广告主所有广告最近7天每天的查看数
+    public ResType getAd7DaysShowByAdUserId(Integer id) {
+        try {
+            List<Map<String,Integer>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Integer> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),throwRecordsDao.get7DaysShowNums(1,startTime,endTime));
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
+
+    // 某广告主所有广告最近7天每天的扣费数
+    public ResType getAd7DaysCostByAdUserId(Integer id) {
+        try {
+            List<Map<String,Double>> list = new ArrayList<>();
+            for(int i=1;i<8;i++) {
+                Map<String,Double> map = new HashMap<>();
+                Date startTime = Utils.getBeforeKDay0Date(0,new Date(),i);
+                Date endTime = Utils.getBeforeKDay0Date(1,new Date(),i);
+                System.out.println(startTime);
+                System.out.println(endTime);
+                Double cost = throwRecordsDao.get7DaysCostNums(1,startTime,endTime);
+                if(cost==null) {
+                    cost = 0.0;
+                }
+                map.put((startTime.getMonth()+1)+"."+startTime.getDate(),cost);
+                System.out.println(map);
+                list.add(map);
+            }
+            Collections.reverse(list);
+            return new ResType(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
 }
