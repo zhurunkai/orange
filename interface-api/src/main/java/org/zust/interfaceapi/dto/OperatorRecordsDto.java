@@ -10,8 +10,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OperatorRecordsDto implements Serializable {
+
+    public static final Integer READ = 0;
+    public static final Integer ADD = 1;
+    public static final Integer DELETE = 2;
+    public static final Integer COLLECT = 3;
+
     private Integer id;
-    // 操作类型 "delete"或"add"
+    // 操作类型 "delete"或"add"或“read”或“collect”
     private String type;
     // 操作者用户
     private BookUserDto operator;

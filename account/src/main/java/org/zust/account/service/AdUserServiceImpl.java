@@ -209,6 +209,14 @@ public class AdUserServiceImpl implements AdUserService {
     }
 
     // 某广告主所有广告最近7天每天的点击数
+//    public ResType getAd7DaysClickByAdUserId(Integer id) {
+//        try {
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return
+//        }
+//    }
     public ResType getAd7DaysClickByAdUserId(Integer id) {
         try {
             List<Map<String,Integer>> list = new ArrayList<>();

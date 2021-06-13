@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.dto.BookUserDto;
+import org.zust.interfaceapi.service.BookChainService;
 import org.zust.interfaceapi.service.BookService;
 import org.zust.interfaceapi.service.CommonService;
 import org.zust.interfaceapi.service.CommonUserService;
 import org.zust.interfaceapi.utils.ResType;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +28,12 @@ import java.util.Map;
 @RequestMapping("/book")
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
     @Reference(check = false)
     private CommonUserService commonUserService;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private BookChainService chainService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getBook(@RequestHeader("Authorization") String token,
@@ -51,7 +55,7 @@ public class BookController {
     }
 
     @PostMapping("/shelf/{id}/chain/origin")
-    public ResponseEntity<?> addBookShelf(@RequestHeader("Authorization") String token
+    public ResponseEntity<?> addBook(@RequestHeader("Authorization") String token
                                         ,@PathVariable String id
                                          ,@RequestBody HashMap map) {
         ResType tokenRes = commonUserService.checkToken(token);
@@ -62,11 +66,18 @@ public class BookController {
         BookUserDto buser = (BookUserDto) tokenRes.getData();
         map.put("owner",buser.getId());
         map.put("bookshelf",Integer.parseInt(id));
-        ResType res = bookService.addBook(map);
-        if(res.getStatus()==200) {
-            return ResponseEntity.ok(res.getData());
+        ArrayList tabs = (ArrayList) map.get("tabs");
+        System.out.println("size ="+tabs.size());
+        for (Object tab : tabs) {
+            System.out.println(tab);
         }
-        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+
+        return null;
+//        ResType res = bookService.addBook(map);
+//        if(res.getStatus()==200) {
+//            return ResponseEntity.ok(res.getData());
+//        }
+//        return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
 
     @GetMapping("/shelf/{sid}/chain/{cid}/origin")
@@ -91,5 +102,20 @@ public class BookController {
         return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
 
+    @PostMapping("/operate/read")
+    public ResponseEntity<?> addBookRecord(@RequestHeader("Authorization") String token
+                                            ,@RequestBody HashMap map) {
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
 
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner",buser.getId());
+        ResType res = chainService.addReaderAccord(map);
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+    }
 }
