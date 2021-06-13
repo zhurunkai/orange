@@ -3,7 +3,9 @@ package org.zust.account.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.TabDao;
+import org.zust.account.dao.TabWeightDao;
 import org.zust.account.entity.TabEntity;
+import org.zust.account.entity.TabWeightEntity;
 import org.zust.interfaceapi.service.TabService;
 import org.zust.interfaceapi.utils.ResType;
 
@@ -13,11 +15,13 @@ import java.util.Map;
 
 
 @Service
-@org.apache.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service(timeout = 300000)
 public class TabServiceImpl implements TabService {
 
     @Autowired
     TabDao tabDao;
+    @Autowired
+    private TabWeightDao tabWeightDao;
 
 
     @Override
@@ -45,21 +49,19 @@ public class TabServiceImpl implements TabService {
         return new ResType(nums);
     }
 
-    //根据tag名找id集合
     @Override
-    public ResType findtagNameById(Map param) {
-        ArrayList nums = (ArrayList) param.get("id");
-        ArrayList tabs = new ArrayList();
-        //System.out.println("size ="+tabs.size());
-        if(nums == null){
-            return new ResType(400,103);
+    public Boolean isTagExist(Integer uid, Integer tab) {
+
+        TabWeightEntity tabWeight = tabWeightDao.findByUserAndTab(uid, tab);
+        if (tabWeight==null){
+            TabWeightEntity tabWeightEntity = new TabWeightEntity();
+            tabWeightEntity.setTab(tab);
+            tabWeightEntity.setUser(uid);
+            tabWeightEntity.setWeight(100);
+            tabWeightDao.save(tabWeightEntity);
         }
-        for (Object tab : tabs) {
-//            System.out.println(tab);
-            TabEntity tabEntity = tabDao.findById((Integer) tab).orElse(null);
-            tabs.add(tabEntity.getName());
-        }
-        return new ResType(tabs);
+
+        return true;
     }
 
 
