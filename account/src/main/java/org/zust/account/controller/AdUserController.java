@@ -81,7 +81,6 @@ public class AdUserController {
     //根据广告主id获取最近7天所有投放广告的点击次数
     @GetMapping("/ad/{id}/throw/clicknums")
     public ResponseEntity<?> getAd7DaysClickByAdUserId(@RequestHeader("Authorization") String token, @PathVariable String id){
-        System.out.println("haha");
         ResType tokenRes = commonUserService.checkToken(token);
         if(tokenRes.getStatus()!=200) {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
@@ -95,7 +94,6 @@ public class AdUserController {
     //根据广告主id获取最近7天所有投放广告的查看次数
     @GetMapping("/ad/{id}/throw/shownums")
     public ResponseEntity<?> getAd7DaysShowByAdUserId(@RequestHeader("Authorization") String token, @PathVariable String id){
-        System.out.println("haha");
         ResType tokenRes = commonUserService.checkToken(token);
         if(tokenRes.getStatus()!=200) {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
@@ -114,6 +112,20 @@ public class AdUserController {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
         }
         ResType res = adUserService.getAd7DaysNumsByAdUserId(Integer.parseInt(id));
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
+
+    //根据广告主id获取最近7天所有投放广告的投放次数
+    @GetMapping("/ad/{id}/throw/cost")
+    public ResponseEntity<?> getAd7DaysCostByAdUserId(@RequestHeader("Authorization") String token, @PathVariable String id){
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        ResType res = adUserService.getAd7DaysCostByAdUserId(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
         }
