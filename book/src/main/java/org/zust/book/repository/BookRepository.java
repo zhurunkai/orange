@@ -9,5 +9,5 @@ import org.zust.book.entity.Book;
  * @function:
  **/
 public interface BookRepository extends JpaRepository<Book,Integer> {
-
+    Book findOneById(Integer id);
 }

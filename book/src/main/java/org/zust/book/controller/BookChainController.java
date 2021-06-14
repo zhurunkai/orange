@@ -124,5 +124,51 @@ public class BookChainController {
 
     }
 
+    @PostMapping("/{id}/chain")
+    public ResponseEntity<?> CollectBook(@RequestHeader("Authorization") String token,
+                                         @PathVariable String id,
+                                         @RequestBody HashMap map) {
+
+        ResType tokenRes = commonUserService.checkToken(token);
+        if (tokenRes.getStatus() != 200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner", buser.getId());
+        map.put("sid", id);
+
+        ResType res = chainService.CollectChain(map);
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        } else {
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
+        }
+    }
+
+
+    @PatchMapping("/{sid}/chain/{cid}/alive")
+    public ResponseEntity<?> SetAlive(@RequestHeader("Authorization") String token,
+                                      @PathVariable String sid,
+                                      @PathVariable String cid,
+                                      @RequestBody HashMap map) {
+
+        ResType tokenRes = commonUserService.checkToken(token);
+        if (tokenRes.getStatus() != 200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        map.put("owner", buser.getId());
+        map.put("sid", sid);
+        map.put("cid",cid);
+
+        ResType res = chainService.deleteChain(map);
+        if (res.getStatus() == 200) {
+            return ResponseEntity.ok(res.getData());
+        } else {
+            return ResponseEntity.status(res.getStatus()).body(res.getCode());
+        }
+    }
 
 }

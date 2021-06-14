@@ -54,6 +54,8 @@ public class TabServiceImpl implements TabService {
     @Override
     public Boolean isTagExist(Integer uid, Integer tab) {
 
+        // 如果用户没有此书的id，则在tag_weight上加上
+        // 有的话，则加30权重
         TabWeightEntity tabWeight = tabWeightDao.findByUserAndTab(uid, tab);
         if (tabWeight==null){
             TabWeightEntity tabWeightEntity = new TabWeightEntity();
@@ -61,6 +63,9 @@ public class TabServiceImpl implements TabService {
             tabWeightEntity.setUser(uid);
             tabWeightEntity.setWeight(100);
             tabWeightDao.save(tabWeightEntity);
+        }else {
+            tabWeight.setWeight(tabWeight.getWeight()+30);
+            tabWeightDao.save(tabWeight);
         }
 
         return true;

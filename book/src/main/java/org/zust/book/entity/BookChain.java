@@ -1,6 +1,7 @@
 package org.zust.book.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
@@ -16,7 +17,12 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "book_chain")
+@NoArgsConstructor
 public class BookChain {
+
+    public static final Integer ALIVE = 1;
+    public static final Integer LIFELESS = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "int(11)")
@@ -43,4 +49,13 @@ public class BookChain {
     @Column(columnDefinition = "varchar comment '书的原始url地址'")
     private Integer origin;
 
+    public BookChain(String name, Integer owner, Integer shelf, String cover,  Integer origin) {
+        this.name = name;
+        this.owner = owner;
+        this.shelf = shelf;
+        this.cover = cover;
+        this.process = 0;
+        this.alive = ALIVE;
+        this.origin = origin;
+    }
 }

@@ -69,7 +69,7 @@ public class BookShelfServiceImpl implements BookShelfService {
         Integer owner = (Integer) map.get("owner");
 
         BookShelf defaultShelf = bookShelfRepository.findByDefaultShelf(owner);
-        BookShelf targetShelf = bookShelfRepository.findById(Integer.parseInt(bsid)).orElse(null);
+        BookShelf targetShelf = bookShelfRepository.findOneById(Integer.parseInt(bsid));
         if (targetShelf==null) return new ResType(400,102);
 
         // 默认书架不允许删除
@@ -99,7 +99,7 @@ public class BookShelfServiceImpl implements BookShelfService {
             BookShelf byNameAndOwner = bookShelfRepository.findByNameAndOwner(name, owner);
             if (byNameAndOwner!=null) return new ResType(400,106);
 
-            BookShelf bookShelf = bookShelfRepository.findById(Integer.parseInt(bsid)).orElse(null);
+            BookShelf bookShelf = bookShelfRepository.findOneById(Integer.parseInt(bsid));
             if (bookShelf!=null){
                 bookShelf.setName(name);
                 BookShelf save = bookShelfRepository.save(bookShelf);
@@ -120,7 +120,7 @@ public class BookShelfServiceImpl implements BookShelfService {
 
         try {
 
-            BookShelf bookShelf = bookShelfRepository.findById(Integer.parseInt(id)).orElse(null);
+            BookShelf bookShelf = bookShelfRepository.findOneById(Integer.parseInt(id));
             if (bookShelf!=null){
                 return new ResType(e2d(bookShelf,bookShelf.getOwner()));
             }else {

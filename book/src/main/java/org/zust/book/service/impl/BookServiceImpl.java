@@ -62,7 +62,7 @@ public class BookServiceImpl implements BookService {
         if (id==null) return new ResType(400,101);
 
         try {
-            Book book = bookRepository.findById(Integer.parseInt(id)).orElse(null);
+            Book book = bookRepository.findOneById(Integer.parseInt(id));
             if (book!=null){
                 return new ResType(e2d(book));
             }else {
@@ -115,7 +115,6 @@ public class BookServiceImpl implements BookService {
                     bookTag.setBook(bookSave.getId());
                     bookTag.setTab((Integer) tag);
                     bookTagRepository.save(bookTag);
-                    // 如果用户没有此书的id，则在tag_weight上加上
                     tabService.isTagExist(owner,bookTag.getTab());
                 }
 
@@ -183,10 +182,10 @@ public class BookServiceImpl implements BookService {
         if (chain==null) return new ResType(400,101);
 
         try {
-            BookChain bookChain = chainRepository.findById(Integer.parseInt(chain)).orElse(null);
+            BookChain bookChain = chainRepository.findOneById(Integer.parseInt(chain));
 
             if (bookChain!=null){
-                Book book = bookRepository.findById(bookChain.getOrigin()).orElse(null);
+                Book book = bookRepository.findOneById(bookChain.getOrigin());
                 String originUrl = book.getOriginUrl();
                 String fileName = originUrl.substring(originUrl.lastIndexOf("/"));
                 String[] fname = fileName.split("\\.");
