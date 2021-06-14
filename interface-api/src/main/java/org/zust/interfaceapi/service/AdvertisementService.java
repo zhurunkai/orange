@@ -3,6 +3,7 @@ package org.zust.interfaceapi.service;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.utils.ResType;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AdvertisementService {
@@ -12,5 +13,6 @@ public interface AdvertisementService {
     public ResType getAdvertisementThrow(Integer id);
     public ResType getAdvertisementByTabId(Integer tabId);
     public ResType getAdvertisementByAdUser(Integer adUserId);
+    public ResType getAdByIds(List<Integer> ids);
 
 }

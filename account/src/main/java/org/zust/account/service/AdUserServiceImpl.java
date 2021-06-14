@@ -96,31 +96,55 @@ public class AdUserServiceImpl implements AdUserService {
     public ResType findAdUserBillById(int id) {
         try {
             List<ThrowRecordsEntity> byOwner = throwRecordsDao.findByOwner(id);
-            ArrayList list = new ArrayList<>();
-            for (ThrowRecordsEntity t : byOwner) {
-                String bid = Integer.toString(t.getBook());
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("id", bid);
-                Integer adid = t.getAdvertisement();
-                ResType book = bookService.getBook(map);
-                ResType ad = advertisementService.getAdvertisement(adid);
-                ResType au = findAdUserAllInformById(id);
-                BookDto bookDto = (BookDto) book.getData();
-                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
-                AdUserDto adUserDto = (AdUserDto) au.getData();
-                ThrowRecordsDto throwRecordsDto = e2d(t);
-                throwRecordsDto.setBook(bookDto);
-                throwRecordsDto.setAdvertisement(advertisementDto);
-                throwRecordsDto.setOwner(adUserDto);
-                System.out.println(throwRecordsDto);
+            List<ThrowRecordsDto> list = new ArrayList<>();
+            List<Integer> adids = new ArrayList<>();
+            List<Integer> bids = new ArrayList<>();
+            for (ThrowRecordsEntity throwRecordsEntity : byOwner) {
+                adids.add(throwRecordsEntity.getAdvertisement());
+                bids.add(throwRecordsEntity.getBook());
+            }
+            List<BookDto> bookDtos = new ArrayList<>();
+            for (Integer bid : bids) {
+                HashMap<String,Object> map = new HashMap<>();
+                map.put("id",String.valueOf(bid));
+                bookDtos.add((BookDto) (bookService.getBook(map).getData()));
+            }
+            ResType adRes = advertisementService.getAdByIds(adids);
+            if(adRes.getStatus()!=200) {
+                return new ResType(500,108);
+            }
+            List<AdvertisementDto> advertisementDtos = (List<AdvertisementDto>) advertisementService.getAdByIds(adids).getData();
+            System.out.println(advertisementDtos);
+            for (AdvertisementDto advertisementDto : advertisementDtos) {
+                System.out.println(advertisementDto);
+            }
+            for (int i = 0; i < byOwner.size(); i++) {
+                ThrowRecordsDto throwRecordsDto = e2d(byOwner.get(i));
+                throwRecordsDto.setAdvertisement(advertisementDtos.get(i));
+                throwRecordsDto.setBook(bookDtos.get(i));
                 list.add(throwRecordsDto);
             }
+//            for (ThrowRecordsEntity t : byOwner) {
+//
+////                ResType book = bookService.getBook(map);
+////                ResType ad = advertisementService.getAdvertisement(adid);
+////                BookDto bookDto = (BookDto) book.getData();
+////                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
+////                AdUserDto adUserDto = (AdUserDto) au.getData();
+//                ThrowRecordsDto throwRecordsDto = e2d(t);
+//                throwRecordsDto.setBook(bookDto);
+//                throwRecordsDto.setAdvertisement(advertisementDto);
+//                throwRecordsDto.setOwner(adUserDto);
+//                System.out.println(throwRecordsDto);
+//                list.add(throwRecordsDto);
+//            }
             return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(500, 101);
         }
     }
+
 
     @Override
     public ResType findRecordsByAdId(int id) {
@@ -327,5 +351,19 @@ public class AdUserServiceImpl implements AdUserService {
             return new ResType(map);
         }
         return new ResType(500,108);
+    }
+
+    public ResType getAdUserAllInfoByIds(List<Integer> ids) {
+        try {
+            List<AdUserEntity> adUserEntities =  adUserDao.findAllByIds(ids);
+            List<AdUserDto> adUserDtos = new ArrayList<>();
+            for (AdUserEntity adUserEntity : adUserEntities) {
+                adUserDtos.add(e2d(adUserEntity));
+            }
+            return new ResType(adUserDtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
     }
 }
