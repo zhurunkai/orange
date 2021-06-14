@@ -34,6 +34,7 @@ import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author: Linxy
@@ -235,6 +236,24 @@ public class BookServiceImpl implements BookService {
             return new ResType(400,105);
         }
 
+
+    }
+
+    @Override
+    public ResType findBookDtobyIds(List<Integer> ids) {
+
+        try{
+            List<Book> bookList = bookRepository.findAllByIds(ids);
+            ArrayList<BookDto> list = new ArrayList<>();
+            for (Book book : bookList) {
+                list.add(e2d(book));
+            }
+            return new ResType(list);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
 
     }
 
