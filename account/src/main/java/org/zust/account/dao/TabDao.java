@@ -15,4 +15,5 @@ public interface TabDao extends JpaRepository<TabEntity,Integer> {
     TabEntity findxxById(Integer id);
     @Query(value = "from TabEntity where id in ?1")
     List<TabEntity> findAllByIds(List<Integer> ids);
+    TabEntity findOneById(Integer id);
 }
