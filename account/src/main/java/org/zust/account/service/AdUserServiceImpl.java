@@ -98,27 +98,16 @@ public class AdUserServiceImpl implements AdUserService {
             List<ThrowRecordsEntity> byOwner = throwRecordsDao.findByOwner(id);
             ArrayList list = new ArrayList<>();
             for (ThrowRecordsEntity t : byOwner) {
-
                 String bid = Integer.toString(t.getBook());
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("id", bid);
                 Integer adid = t.getAdvertisement();
-
-                //System.out.println(adid);
-
                 ResType book = bookService.getBook(map);
                 ResType ad = advertisementService.getAdvertisement(adid);
                 ResType au = findAdUserAllInformById(id);
-
-                //System.out.println(book);
-
-
                 BookDto bookDto = (BookDto) book.getData();
-//                bookDto.setOwner();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
                 AdUserDto adUserDto = (AdUserDto) au.getData();
-                //System.out.println(adUserDto);
-
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
                 throwRecordsDto.setAdvertisement(advertisementDto);
