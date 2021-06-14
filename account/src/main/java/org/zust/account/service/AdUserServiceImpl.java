@@ -5,8 +5,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.AdUserDao;
+import org.zust.account.dao.SaltDao;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.AdUserEntity;
+import org.zust.account.entity.SaltEntity;
 import org.zust.account.entity.ThrowRecordsEntity;
 import org.zust.account.utils.IdentifyingCode;
 import org.zust.account.utils.RandomName;
@@ -46,33 +48,45 @@ public class AdUserServiceImpl implements AdUserService {
     @Autowired
     private BookUserService bookUserService;
 
+    private SaltDao saltDao;
+
 
     @Override
     public ResType lrAdUser(Map param) {
         try {
             String phone = (String) param.get("phone");
-            AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
-            if (adUserEntity == null) {
-                Double money = 10000.00;
-                String randomName = RandomName.nameString();
-                String randomProfile = RandomProfile.profileString();
-                Double freeze = 0.00;
-                String token1 = IdentifyingCode.md5(phone + new Date().getTime());
+            String salt = (String) param.get("salt");
+            String captcha = (String) param.get("captcha");
 
-                AdUserEntity data = new AdUserEntity(money, phone, randomName, randomProfile, freeze, token1);
-                AdUserEntity save = adUserDao.save(data);
+            SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
+            if(yanzheng != null){
+                AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
+                if (adUserEntity == null) {
+                    Double money = 10000.00;
+                    String randomName = RandomName.nameString();
+                    String randomProfile = RandomProfile.profileString();
+                    Double freeze = 0.00;
+                    String token1 = IdentifyingCode.md5(phone + new Date().getTime());
 
-                return new ResType(e2d(save));
+                    AdUserEntity data = new AdUserEntity(money, phone, randomName, randomProfile, freeze, token1);
+                    AdUserEntity save = adUserDao.save(data);
 
-            } else {
-                String token2 = IdentifyingCode.md5(phone + new Date().getTime());
-                AdUserEntity adUserEntity1 = adUserDao.findByPhone(phone);
-                adUserEntity1.setToken(token2);
+                    return new ResType(e2d(save));
 
-                AdUserEntity data = adUserEntity1;
-                AdUserEntity save = adUserDao.save(data);
-                return new ResType(e2d(adUserEntity1));
+                } else {
+                    String token2 = IdentifyingCode.md5(phone + new Date().getTime());
+                    AdUserEntity adUserEntity1 = adUserDao.findByPhone(phone);
+                    adUserEntity1.setToken(token2);
+
+                    AdUserEntity data = adUserEntity1;
+                    AdUserEntity save = adUserDao.save(data);
+                    return new ResType(e2d(adUserEntity1));
+                }
+            }else{
+                return new ResType(500,111);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(400, 107);

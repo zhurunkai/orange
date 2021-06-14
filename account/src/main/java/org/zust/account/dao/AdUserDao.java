@@ -14,4 +14,5 @@ public interface AdUserDao extends JpaRepository<AdUserEntity,Integer> {
     public AdUserEntity findOneById(int id);
     @Query(value = "from AdUserEntity where id in ?1")
     public List<AdUserEntity> findAllByIds(List<Integer> ids);
+
 }

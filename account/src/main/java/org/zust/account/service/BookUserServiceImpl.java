@@ -64,27 +64,36 @@ public class BookUserServiceImpl implements BookUserService {
 
         try {
             String phone = (String) param.get("phone");
-            BookUserEntity bookUserEntity = bookUserDao.findByPhone(phone);
-            if (bookUserEntity == null) {
-                String randomProfile = RandomProfile.profileString();
-                Integer age = 0;
-                String randomName = RandomName.nameString();
-                String sex = "男";
-                String token1 = IdentifyingCode.md5(phone + new Date().getTime());
+            String salt = (String) param.get("salt");
+            String captcha = (String) param.get("captcha");
 
-                BookUserEntity data = new BookUserEntity(phone, randomProfile, age, randomName, sex, token1);
-                BookUserEntity save = bookUserDao.save(data);
+            SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
+            if(yanzheng != null){
 
-                return new ResType(e2d(save));
+                BookUserEntity bookUserEntity = bookUserDao.findByPhone(phone);
+                if (bookUserEntity == null) {
+                    String randomProfile = RandomProfile.profileString();
+                    Integer age = 0;
+                    String randomName = RandomName.nameString();
+                    String sex = "男";
+                    String token1 = IdentifyingCode.md5(phone + new Date().getTime());
 
-            } else {
-                String token2 = IdentifyingCode.md5(phone + new Date().getTime());
-                BookUserEntity bookUserEntity1 = bookUserDao.findByPhone(phone);
-                bookUserEntity1.setToken(token2);
+                    BookUserEntity data = new BookUserEntity(phone, randomProfile, age, randomName, sex, token1);
+                    BookUserEntity save = bookUserDao.save(data);
 
-                BookUserEntity data = bookUserEntity1;
-                BookUserEntity save = bookUserDao.save(data);
-                return new ResType(e2d(bookUserEntity1));
+                    return new ResType(e2d(save));
+
+                } else {
+                    String token2 = IdentifyingCode.md5(phone + new Date().getTime());
+                    BookUserEntity bookUserEntity1 = bookUserDao.findByPhone(phone);
+                    bookUserEntity1.setToken(token2);
+
+                    BookUserEntity data = bookUserEntity1;
+                    BookUserEntity save = bookUserDao.save(data);
+                    return new ResType(e2d(bookUserEntity1));
+                 }
+            }else{
+                return new ResType(500,111);
             }
         } catch (Exception e) {
             e.printStackTrace();
