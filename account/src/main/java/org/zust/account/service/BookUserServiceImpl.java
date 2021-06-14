@@ -98,7 +98,7 @@ public class BookUserServiceImpl implements BookUserService {
     @Override
     public ResType findBookUserAllInformById(int buId) {
         try {
-            BookUserEntity busere = bookUserDao.findById(buId).orElse(null);
+            BookUserEntity busere = bookUserDao.findOneById(buId);
             return new ResType(e2d(busere));
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,11 +112,13 @@ public class BookUserServiceImpl implements BookUserService {
         try {
             List<TabWeightEntity> tabWeightEntities = tabWeightDao.findAllByUser(id);
             HashMap<Integer, String> map = new HashMap<>();
+            List<Integer> tabIds = new ArrayList<>();
             for (TabWeightEntity t : tabWeightEntities) {
-                int tag = t.getTab();
-                TabEntity tabEntity = tabDao.findById(tag).orElse(null);
-//                tags.add(tabEntity.getName());
-                map.put(tag, tabEntity.getName());
+                tabIds.add(t.getTab());
+            }
+            List<TabEntity> tabEntities = tabDao.findAllByIds(tabIds);
+            for (TabEntity tabEntity : tabEntities) {
+                map.put(tabEntity.getId(),tabEntity.getName());
             }
             return new ResType(map);
         } catch (Exception e) {
@@ -202,7 +204,7 @@ public class BookUserServiceImpl implements BookUserService {
 
     // 根据tabid获得tabDto
     public ResType findTabById(Integer id) {
-        TabEntity tabEntity = tabDao.findById(id).orElse(null);
+        TabEntity tabEntity = tabDao.findOneById(id);
         if (tabEntity == null) {
             return new ResType(500, 101);
         }

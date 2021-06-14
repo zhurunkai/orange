@@ -82,7 +82,9 @@ public class AdUserServiceImpl implements AdUserService {
     @Override
     public ResType findAdUserAllInformById(int auId) {
         try {
-            AdUserEntity ausere = adUserDao.findById(auId).orElse(null);
+//            System.out.println("开始" + System.currentTimeMillis());
+            AdUserEntity ausere = adUserDao.findOneById(auId);
+//            System.out.println("结束" + System.currentTimeMillis());
             return new ResType(e2d(ausere));
         } catch (Exception e) {
             e.printStackTrace();
