@@ -47,7 +47,7 @@ public class AdUserServiceImpl implements AdUserService {
     private ThrowRecordsDao throwRecordsDao;
     @Autowired
     private BookUserService bookUserService;
-
+    @Autowired
     private SaltDao saltDao;
 
 
@@ -57,8 +57,9 @@ public class AdUserServiceImpl implements AdUserService {
             String phone = (String) param.get("phone");
             String salt = (String) param.get("salt");
             String captcha = (String) param.get("captcha");
-
+            
             SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
+
             if(yanzheng != null){
                 AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
                 if (adUserEntity == null) {

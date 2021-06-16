@@ -68,6 +68,7 @@ public class BookUserServiceImpl implements BookUserService {
             String captcha = (String) param.get("captcha");
 
             SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
+            System.out.println(yanzheng);
             if(yanzheng != null){
 
                 BookUserEntity bookUserEntity = bookUserDao.findByPhone(phone);
