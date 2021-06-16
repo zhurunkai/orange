@@ -51,13 +51,14 @@ public class AdUserServiceImpl implements AdUserService {
     private SaltDao saltDao;
 
 
+
     @Override
     public ResType lrAdUser(Map param) {
         try {
             String phone = (String) param.get("phone");
             String salt = (String) param.get("salt");
             String captcha = (String) param.get("captcha");
-            
+
             SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
 
             if(yanzheng != null){
@@ -110,13 +111,23 @@ public class AdUserServiceImpl implements AdUserService {
     @Override
     public ResType findAdUserBillById(int id) {
         try {
-            List<ThrowRecordsEntity> byOwner = throwRecordsDao.findByOwner(id);
+
+            ResType adsByAuId = findAdsByAuId(id);
+            List<AdvertisementDto> ad = (List<AdvertisementDto>) adsByAuId.getData();
+            List<Integer> adid =new ArrayList<>();
+            for (AdvertisementDto advertisementDto : ad) {
+                Integer i = advertisementDto.getId();
+                adid.add(i);
+            }
+            List<ThrowRecordsEntity> byOwner = throwRecordsDao.findAllByAdids(adid);
             List<ThrowRecordsDto> list = new ArrayList<>();
             List<Integer> adids = new ArrayList<>();
             List<Integer> bids = new ArrayList<>();
+            List<Integer> buid = new ArrayList<>();
             for (ThrowRecordsEntity throwRecordsEntity : byOwner) {
                 adids.add(throwRecordsEntity.getAdvertisement());
                 bids.add(throwRecordsEntity.getBook());
+                buid.add(throwRecordsEntity.getOwner());
             }
             List<BookDto> bookDtos = new ArrayList<>();
             for (Integer bid : bids) {
@@ -129,14 +140,19 @@ public class AdUserServiceImpl implements AdUserService {
                 return new ResType(500,108);
             }
             List<AdvertisementDto> advertisementDtos = (List<AdvertisementDto>) advertisementService.getAdByIds(adids).getData();
-            System.out.println(advertisementDtos);
-            for (AdvertisementDto advertisementDto : advertisementDtos) {
-                System.out.println(advertisementDto);
+//            System.out.println(advertisementDtos);
+//            for (AdvertisementDto advertisementDto : advertisementDtos) {
+//                System.out.println(advertisementDto);
+//            }
+            List<BookUserDto> bookUserDtos = new ArrayList<>();
+            for (Integer i : buid) {
+                bookUserDtos.add((BookUserDto) bookUserService.findBookUserAllInformById(i).getData());
             }
             for (int i = 0; i < byOwner.size(); i++) {
                 ThrowRecordsDto throwRecordsDto = e2d(byOwner.get(i));
                 throwRecordsDto.setAdvertisement(advertisementDtos.get(i));
                 throwRecordsDto.setBook(bookDtos.get(i));
+                throwRecordsDto.setOwner(bookUserDtos.get(i));
                 list.add(throwRecordsDto);
             }
 //            for (ThrowRecordsEntity t : byOwner) {
@@ -193,12 +209,12 @@ public class AdUserServiceImpl implements AdUserService {
 
                 BookDto bookDto = (BookDto) book.getData();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
-                AdUserDto adUserDto = (AdUserDto) au.getData();
+                BookUserDto bookUserDto = (BookUserDto) au.getData();
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
                 throwRecordsDto.setAdvertisement(advertisementDto);
-                throwRecordsDto.setOwner(adUserDto);
+                throwRecordsDto.setOwner(bookUserDto);
                 list.add(throwRecordsDto);
             }
 //            System.out.println(byOwner);

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @Service
-@org.apache.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service(timeout = 300000)
 public class CommonServiceImpl implements CommonService {
     @Override
     public ResType uploadfile(MultipartFile file) {
