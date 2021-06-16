@@ -108,6 +108,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementDto;
     }
 
+    public AdvertisementDto pureE2d(AdvertisementEntity advertisementEntity) {
+        AdvertisementDto advertisementDto = new AdvertisementDto();
+        BeanUtils.copyProperties(advertisementEntity, advertisementDto);
+        return advertisementDto;
+    }
+
     // 根据tabid获得所有广告id
     @Override
     public ResType getAdvertisementByTabId(Integer tabId) {
@@ -134,6 +140,35 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             for (AdvertisementEntity advertisementEntity : advertisementEntities) {
                 advertisementDtos.add(e2d(advertisementEntity));
             }
+            return new ResType(advertisementDtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
+    }
+
+    // 根据ids获得list
+    public ResType getAdByIds(List<Integer> ids) {
+        try {
+            List<AdvertisementEntity> advertisementEntities = new ArrayList<>();
+            for (Integer id : ids) {
+                advertisementEntities.add(advertisementDao.findOneById(id));
+            }
+//            System.out.println(ids);
+//            System.out.println(advertisementEntities);
+            List<AdvertisementDto> advertisementDtos = new ArrayList<>();
+            for (AdvertisementEntity advertisementEntity : advertisementEntities) {
+                AdvertisementDto advertisementDto = pureE2d(advertisementEntity);
+                advertisementDto.setOwner((AdUserDto) adUserService.findAdUserAllInformById(advertisementEntity.getOwner()).getData());
+                advertisementDtos.add(advertisementDto);
+            }
+//            System.out.println(advertisementDtos);
+//            List<AdUserDto> adUserDtos = (List<AdUserDto>) res.getData();
+//            System.out.println(adUserDtos.size());
+//            System.out.println(advertisementDtos.size());
+//            for (int i = 0; i < advertisementDtos.size(); i++) {
+//                advertisementDtos.get(i).setOwner(adUserDtos.get(i));
+//            }
             return new ResType(advertisementDtos);
         } catch (Exception e) {
             e.printStackTrace();

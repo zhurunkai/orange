@@ -24,6 +24,7 @@ import java.util.List;
  * @function:
  **/
 @Service
+@org.apache.dubbo.config.annotation.Service(timeout = 300000)
 public class BookChainServiceImpl implements BookChainService {
 
     @Reference(check = false)

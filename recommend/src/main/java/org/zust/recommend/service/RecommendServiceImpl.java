@@ -14,7 +14,7 @@ import org.zust.recommend.dto.BookId2BuserIdDto;
 import java.util.*;
 
 @Service
-@org.apache.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service(timeout = 300000)
 public class RecommendServiceImpl implements RecommendService {
     @Reference(check = false)
     private BookUserService bookUserService;

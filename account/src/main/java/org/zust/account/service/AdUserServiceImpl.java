@@ -5,8 +5,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zust.account.dao.AdUserDao;
+import org.zust.account.dao.SaltDao;
 import org.zust.account.dao.ThrowRecordsDao;
 import org.zust.account.entity.AdUserEntity;
+import org.zust.account.entity.SaltEntity;
 import org.zust.account.entity.ThrowRecordsEntity;
 import org.zust.account.utils.IdentifyingCode;
 import org.zust.account.utils.RandomName;
@@ -25,13 +27,7 @@ import java.util.*;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class AdUserServiceImpl implements AdUserService {
-
-    //    @Reference
-//    private BookService bookService;
-//
-//    @Reference
-//    private AdvertisementService advertisementService;
-//
+    
     @Reference(check = false)
     private AdvertisementService advertisementService;
 
@@ -45,34 +41,48 @@ public class AdUserServiceImpl implements AdUserService {
     private ThrowRecordsDao throwRecordsDao;
     @Autowired
     private BookUserService bookUserService;
+    @Autowired
+    private SaltDao saltDao;
+
 
 
     @Override
     public ResType lrAdUser(Map param) {
         try {
             String phone = (String) param.get("phone");
-            AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
-            if (adUserEntity == null) {
-                Double money = 10000.00;
-                String randomName = RandomName.nameString();
-                String randomProfile = RandomProfile.profileString();
-                Double freeze = 0.00;
-                String token1 = IdentifyingCode.md5(phone + new Date().getTime());
+            String salt = (String) param.get("salt");
+            String captcha = (String) param.get("captcha");
 
-                AdUserEntity data = new AdUserEntity(money, phone, randomName, randomProfile, freeze, token1);
-                AdUserEntity save = adUserDao.save(data);
+            SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
 
-                return new ResType(e2d(save));
+            if(yanzheng != null){
+                AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
+                if (adUserEntity == null) {
+                    Double money = 10000.00;
+                    String randomName = RandomName.nameString();
+                    String randomProfile = RandomProfile.profileString();
+                    Double freeze = 0.00;
+                    String token1 = IdentifyingCode.md5(phone + new Date().getTime());
 
-            } else {
-                String token2 = IdentifyingCode.md5(phone + new Date().getTime());
-                AdUserEntity adUserEntity1 = adUserDao.findByPhone(phone);
-                adUserEntity1.setToken(token2);
+                    AdUserEntity data = new AdUserEntity(money, phone, randomName, randomProfile, freeze, token1);
+                    AdUserEntity save = adUserDao.save(data);
 
-                AdUserEntity data = adUserEntity1;
-                AdUserEntity save = adUserDao.save(data);
-                return new ResType(e2d(adUserEntity1));
+                    return new ResType(e2d(save));
+
+                } else {
+                    String token2 = IdentifyingCode.md5(phone + new Date().getTime());
+                    AdUserEntity adUserEntity1 = adUserDao.findByPhone(phone);
+                    adUserEntity1.setToken(token2);
+
+                    AdUserEntity data = adUserEntity1;
+                    AdUserEntity save = adUserDao.save(data);
+                    return new ResType(e2d(adUserEntity1));
+                }
+            }else{
+                return new ResType(500,111);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(400, 107);
@@ -95,32 +105,71 @@ public class AdUserServiceImpl implements AdUserService {
     @Override
     public ResType findAdUserBillById(int id) {
         try {
-            List<ThrowRecordsEntity> byOwner = throwRecordsDao.findByOwner(id);
-            ArrayList list = new ArrayList<>();
-            for (ThrowRecordsEntity t : byOwner) {
-                String bid = Integer.toString(t.getBook());
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("id", bid);
-                Integer adid = t.getAdvertisement();
-                ResType book = bookService.getBook(map);
-                ResType ad = advertisementService.getAdvertisement(adid);
-                ResType au = findAdUserAllInformById(id);
-                BookDto bookDto = (BookDto) book.getData();
-                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
-                AdUserDto adUserDto = (AdUserDto) au.getData();
-                ThrowRecordsDto throwRecordsDto = e2d(t);
-                throwRecordsDto.setBook(bookDto);
-                throwRecordsDto.setAdvertisement(advertisementDto);
-                throwRecordsDto.setOwner(adUserDto);
-                System.out.println(throwRecordsDto);
+
+            ResType adsByAuId = findAdsByAuId(id);
+            List<AdvertisementDto> ad = (List<AdvertisementDto>) adsByAuId.getData();
+            List<Integer> adid =new ArrayList<>();
+            for (AdvertisementDto advertisementDto : ad) {
+                Integer i = advertisementDto.getId();
+                adid.add(i);
+            }
+            List<ThrowRecordsEntity> byOwner = throwRecordsDao.findAllByAdids(adid);
+            List<ThrowRecordsDto> list = new ArrayList<>();
+            List<Integer> adids = new ArrayList<>();
+            List<Integer> bids = new ArrayList<>();
+            List<Integer> buid = new ArrayList<>();
+            for (ThrowRecordsEntity throwRecordsEntity : byOwner) {
+                adids.add(throwRecordsEntity.getAdvertisement());
+                bids.add(throwRecordsEntity.getBook());
+                buid.add(throwRecordsEntity.getOwner());
+            }
+            List<BookDto> bookDtos = new ArrayList<>();
+            for (Integer bid : bids) {
+                HashMap<String,Object> map = new HashMap<>();
+                map.put("id",String.valueOf(bid));
+                bookDtos.add((BookDto) (bookService.getBook(map).getData()));
+            }
+            ResType adRes = advertisementService.getAdByIds(adids);
+            if(adRes.getStatus()!=200) {
+                return new ResType(500,108);
+            }
+            List<AdvertisementDto> advertisementDtos = (List<AdvertisementDto>) advertisementService.getAdByIds(adids).getData();
+//            System.out.println(advertisementDtos);
+//            for (AdvertisementDto advertisementDto : advertisementDtos) {
+//                System.out.println(advertisementDto);
+//            }
+            List<BookUserDto> bookUserDtos = new ArrayList<>();
+            for (Integer i : buid) {
+                bookUserDtos.add((BookUserDto) bookUserService.findBookUserAllInformById(i).getData());
+            }
+            for (int i = 0; i < byOwner.size(); i++) {
+                ThrowRecordsDto throwRecordsDto = e2d(byOwner.get(i));
+                throwRecordsDto.setAdvertisement(advertisementDtos.get(i));
+                throwRecordsDto.setBook(bookDtos.get(i));
+                throwRecordsDto.setOwner(bookUserDtos.get(i));
                 list.add(throwRecordsDto);
             }
+//            for (ThrowRecordsEntity t : byOwner) {
+//
+////                ResType book = bookService.getBook(map);
+////                ResType ad = advertisementService.getAdvertisement(adid);
+////                BookDto bookDto = (BookDto) book.getData();
+////                AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
+////                AdUserDto adUserDto = (AdUserDto) au.getData();
+//                ThrowRecordsDto throwRecordsDto = e2d(t);
+//                throwRecordsDto.setBook(bookDto);
+//                throwRecordsDto.setAdvertisement(advertisementDto);
+//                throwRecordsDto.setOwner(adUserDto);
+//                System.out.println(throwRecordsDto);
+//                list.add(throwRecordsDto);
+//            }
             return new ResType(list);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(500, 101);
         }
     }
+
 
     @Override
     public ResType findRecordsByAdId(int id) {
@@ -154,12 +203,12 @@ public class AdUserServiceImpl implements AdUserService {
 
                 BookDto bookDto = (BookDto) book.getData();
                 AdvertisementDto advertisementDto = (AdvertisementDto) ad.getData();
-                AdUserDto adUserDto = (AdUserDto) au.getData();
+                BookUserDto bookUserDto = (BookUserDto) au.getData();
 
                 ThrowRecordsDto throwRecordsDto = e2d(t);
                 throwRecordsDto.setBook(bookDto);
                 throwRecordsDto.setAdvertisement(advertisementDto);
-                throwRecordsDto.setOwner(adUserDto);
+                throwRecordsDto.setOwner(bookUserDto);
                 list.add(throwRecordsDto);
             }
 //            System.out.println(byOwner);
@@ -327,5 +376,19 @@ public class AdUserServiceImpl implements AdUserService {
             return new ResType(map);
         }
         return new ResType(500,108);
+    }
+
+    public ResType getAdUserAllInfoByIds(List<Integer> ids) {
+        try {
+            List<AdUserEntity> adUserEntities =  adUserDao.findAllByIds(ids);
+            List<AdUserDto> adUserDtos = new ArrayList<>();
+            for (AdUserEntity adUserEntity : adUserEntities) {
+                adUserDtos.add(e2d(adUserEntity));
+            }
+            return new ResType(adUserDtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,101);
+        }
     }
 }

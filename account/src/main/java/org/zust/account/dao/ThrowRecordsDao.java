@@ -20,4 +20,6 @@ public interface ThrowRecordsDao extends JpaRepository<ThrowRecordsEntity,Intege
     public Double get7DaysCostNums(Integer auid, Date startTime,Date endTime);
     @Query(nativeQuery = true,value = "select * from throw_records where advertisement in (select id from advertisement where owner=?1)")
     public List<ThrowRecordsEntity> findThrowByAd(int adUserId);
+    @Query(value = "from ThrowRecordsEntity where advertisement in ?1")
+    List<ThrowRecordsEntity> findAllByAdids(List<Integer> adIds);
 }

@@ -3,6 +3,7 @@ package org.zust.interfaceapi.service;
 import org.springframework.web.servlet.tags.Param;
 import org.zust.interfaceapi.utils.ResType;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AdUserService {
@@ -17,6 +18,6 @@ public interface AdUserService {
     public ResType getAd7DaysNumsByAdUserId(Integer id);
     public ResType getAd7DaysCostByAdUserId(Integer id);
     public ResType getAdBuserTabWeights(Integer id);
-
+    public ResType getAdUserAllInfoByIds(List<Integer> ids);
 
 }

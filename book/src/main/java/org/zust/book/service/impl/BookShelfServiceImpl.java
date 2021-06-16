@@ -26,7 +26,7 @@ import java.util.List;
  * @function:
  **/
 @Service
-@org.apache.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service(timeout = 300000)
 public class BookShelfServiceImpl implements BookShelfService {
 
     @Reference(check = false)
