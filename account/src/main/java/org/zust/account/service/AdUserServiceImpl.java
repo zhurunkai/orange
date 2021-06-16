@@ -27,13 +27,7 @@ import java.util.*;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class AdUserServiceImpl implements AdUserService {
-
-    //    @Reference
-//    private BookService bookService;
-//
-//    @Reference
-//    private AdvertisementService advertisementService;
-//
+    
     @Reference(check = false)
     private AdvertisementService advertisementService;
 
