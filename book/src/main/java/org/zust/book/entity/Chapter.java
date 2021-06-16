@@ -14,7 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 @Entity
 @Getter
 @Setter
-@Table(name = "chapter")
 public class Chapter {
 
     @Id
