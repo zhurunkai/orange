@@ -7,6 +7,7 @@ import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author: Linxy
@@ -18,7 +19,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "book_chain")
 @NoArgsConstructor
-public class BookChain {
+public class BookChain implements Serializable {
 
     public static final Integer ALIVE = 1;
     public static final Integer LIFELESS = 0;

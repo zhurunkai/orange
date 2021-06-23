@@ -8,6 +8,7 @@ import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookUserDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.Date;
 @Entity
 @Table(name="throw_records")
 @NoArgsConstructor
-public class ThrowRecordsEntity {
+public class ThrowRecordsEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -32,4 +33,13 @@ public class ThrowRecordsEntity {
     private Integer advertisement;
     @Column(name="owner")
     private Integer owner;
+
+    public ThrowRecordsEntity(String type, Date datetime, Double cost, Integer book, Integer advertisement, Integer owner) {
+        this.type = type;
+        this.datetime = datetime;
+        this.cost = cost;
+        this.book = book;
+        this.advertisement = advertisement;
+        this.owner = owner;
+    }
 }

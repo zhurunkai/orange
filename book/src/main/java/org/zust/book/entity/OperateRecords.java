@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-public class OperateRecords {
+public class OperateRecords  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

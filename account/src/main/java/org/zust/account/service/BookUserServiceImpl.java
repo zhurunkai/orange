@@ -1,5 +1,6 @@
 package org.zust.account.service;
 
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,13 @@ import org.zust.account.entity.TabWeightEntity;
 import org.zust.account.utils.IdentifyingCode;
 import org.zust.account.utils.RandomName;
 import org.zust.account.utils.RandomProfile;
+import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.dto.TabDto;
 import org.zust.interfaceapi.dto.TabWeightDto;
+import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.BookUserService;
+import org.zust.interfaceapi.service.RecommendService;
 import org.zust.interfaceapi.service.TabService;
 import org.zust.interfaceapi.utils.ResType;
 
@@ -39,7 +43,13 @@ public class BookUserServiceImpl implements BookUserService {
     private TabDao tabDao;
 
     @Autowired
-    TabService tabService;
+    private TabService tabService;
+
+    @Autowired
+    private AdUserService adUserService;
+
+    @Reference(check = false)
+    private RecommendService recommendService;
 
 
     //读者登录所用验证码
@@ -221,5 +231,38 @@ public class BookUserServiceImpl implements BookUserService {
         TabDto tabDto = new TabDto();
         BeanUtils.copyProperties(tabEntity, tabDto);
         return new ResType(tabDto);
+    }
+
+    @Override
+    public ResType getRecommendAd(Integer id,Integer bookId) {
+        try {
+            ResType res = recommendService.adRecommendByUserTab(id);
+            if(res.getStatus()!=200) {
+                return res;
+            }
+            ResType res1 = adUserService.updateMoney(0.1,((AdvertisementDto)res.getData()).getOwner().getId());
+            ResType res2 = adUserService.addThrow("查看",0.1,id,((AdvertisementDto)res.getData()).getId(),bookId);
+            if(res1.getStatus()==200&&res2.getStatus()==200) {
+                return res;
+            }
+            return new ResType(500,108);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
+
+    @Override
+    public ResType clickAd(Integer id,Integer bookId,Integer adId) {
+        try {
+            ResType res2 = adUserService.addThrow("点击",1.0,id,adId,bookId);
+            if(res2.getStatus()==200) {
+                return res2;
+            }
+            return new ResType(500,108);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
     }
 }

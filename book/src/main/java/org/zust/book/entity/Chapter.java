@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.io.Serializable;
 
 /**
  * @author: Linxy
@@ -14,7 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 @Entity
 @Getter
 @Setter
-public class Chapter {
+public class Chapter  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

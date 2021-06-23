@@ -391,4 +391,31 @@ public class AdUserServiceImpl implements AdUserService {
             return new ResType(500,101);
         }
     }
+
+    @Override
+    public ResType updateMoney(Double money, Integer adId) {
+        try {
+            AdUserEntity adUserEntity = adUserDao.findOneById(adId);
+            adUserEntity.setFreeze(adUserEntity.getFreeze()-money);
+            adUserDao.save(adUserEntity);
+            return new ResType(adUserEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
+
+    @Override
+    public ResType addThrow(String type, Double money, Integer buId, Integer adId, Integer bookId) {
+        try {
+            ThrowRecordsEntity throwRecordsEntity = new ThrowRecordsEntity(type,new Date(),money,bookId,adId,buId);
+            ThrowRecordsEntity throwRecordsEntity1 = throwRecordsDao.save(throwRecordsEntity);
+            return new ResType(throwRecordsEntity1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
+
+
 }

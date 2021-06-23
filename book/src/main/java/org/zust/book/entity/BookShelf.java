@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.zust.interfaceapi.dto.BookUserDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author: Linxy
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Table(name = "bookshelf")
-public class BookShelf {
+public class BookShelf implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
