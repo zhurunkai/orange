@@ -111,4 +111,23 @@ public class BookController {
         }
         return ResponseEntity.status(res.getStatus()).body(res.getCode());
     }
+
+    @GetMapping("/recommend/user")
+    public ResponseEntity<?> recommendByUser(
+            @RequestHeader("Authorization") String token) {
+
+        System.out.println(commonUserService);
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+
+        BookUserDto buser = (BookUserDto) tokenRes.getData();
+        ResType res = bookService.recommendByUser(buser.getId());
+
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return ResponseEntity.status(res.getStatus()).body(res.getCode());
+    }
 }

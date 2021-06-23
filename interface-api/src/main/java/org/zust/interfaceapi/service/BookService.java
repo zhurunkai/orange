@@ -20,4 +20,8 @@ public interface BookService {
     public ResType checkConvert(HashMap map);
 
     public ResType findBookDtobyIds(List<Integer> ids);
+
+    public ResType recommendByUser(Integer userId);
+
+    public ResType recommendByItem(Integer userId);
 }

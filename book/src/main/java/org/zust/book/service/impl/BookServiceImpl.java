@@ -17,10 +17,7 @@ import org.zust.interfaceapi.dto.BookChainDto;
 import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.BookShelfDto;
 import org.zust.interfaceapi.dto.BookUserDto;
-import org.zust.interfaceapi.service.BookService;
-import org.zust.interfaceapi.service.BookUserService;
-import org.zust.interfaceapi.service.CommonService;
-import org.zust.interfaceapi.service.TabService;
+import org.zust.interfaceapi.service.*;
 import org.zust.interfaceapi.utils.BookUtils;
 import org.zust.interfaceapi.utils.FileUtil;
 import org.zust.interfaceapi.utils.ResType;
@@ -49,6 +46,8 @@ public class BookServiceImpl implements BookService {
     private BookUserService bookUserService;
     @Reference(check = false)
     private TabService tabService;
+    @Reference(check = false)
+    private RecommendService recommendService;
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -255,6 +254,30 @@ public class BookServiceImpl implements BookService {
             return new ResType(500,101);
         }
 
+    }
+
+    @Override
+    public ResType recommendByUser(Integer userId) {
+
+        ResType resType = recommendService.userBasedCF(userId);
+        List<Integer> data = (List<Integer>) resType.getData();
+        if (data.size()>=10){
+            data.subList(0,9);
+        }
+
+        return findBookDtobyIds(data);
+    }
+
+    @Override
+    public ResType recommendByItem(Integer userId) {
+
+        ResType resType = recommendService.itemBasedCF(userId);
+        List<Integer> data = (List<Integer>) resType.getData();
+        if (data.size()>=5){
+            data.subList(0,4);
+        }
+
+        return findBookDtobyIds(data);
     }
 
     public BookDto e2d(Book book) {
