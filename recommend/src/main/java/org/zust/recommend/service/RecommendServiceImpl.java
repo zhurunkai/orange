@@ -109,10 +109,6 @@ public class RecommendServiceImpl implements RecommendService {
                 similarBooksToSetToList.remove(i);
             }
         }
-        // 打印
-//        for (Integer similarBook : similarBooksToSetToList) {
-//            System.out.println(similarBook);
-//        }
         return new ResType(similarBooksToSetToList);
     }
 
@@ -122,9 +118,9 @@ public class RecommendServiceImpl implements RecommendService {
         // 对初始chain集合进行降维，获得BookId2BuserIDto
         List<BookId2BuserIdDto> bookId2BuserIdDtos = dimensionReduction2CF(bookChainDtos);
         // 获得键值map
-        HashMap<Integer,List<Integer>> key2ValueCollection = getKey2ValueCollection(bookId2BuserIdDtos,"user");
+        HashMap<Integer,List<Integer>> key2ValueCollection = getKey2ValueCollection(bookId2BuserIdDtos,"item");
         // 获得相似id
-        List<Integer> similarIds = calcSimilarity(key2ValueCollection,"user",id,3);
+        List<Integer> similarIds = calcSimilarity(key2ValueCollection,"item",id,3);
         return new ResType(similarIds);
     }
     // 获得键值map
@@ -149,7 +145,6 @@ public class RecommendServiceImpl implements RecommendService {
     }
     
     public List<Integer> calcSimilarity(HashMap<Integer,List<Integer>> key2ValueCollection, String type, Integer id, Integer num) {
-
         // 相似度计算(以id为3为例，之后根据传值所定)
         // 首先定义一个相似度map，之后进行遍历
         HashMap<Integer,Double> similarityMap = new HashMap<>();
@@ -168,9 +163,7 @@ public class RecommendServiceImpl implements RecommendService {
                     }
                 }
                 similarityMap.put(key,((double)commonNum/currentIdValues)*((double)commonNum/cycleIdValues));
-
             }
-
         }
         // 得到相似度map之后，排序
         List<Map.Entry<Integer, Double>> similarList = new ArrayList<Map.Entry<Integer, Double>>(similarityMap.entrySet());
@@ -183,14 +176,10 @@ public class RecommendServiceImpl implements RecommendService {
         // 取出3个最相似的
         List<Map.Entry<Integer, Double>> processedSimilarity =similarList.subList(0,num);
         // 对HashMap中的 value 进行排序后  显示排序结果
-//        for (int i = 0; i < processedSimilarity.size(); i++) {
-//            String vid = similarList.get(i).toString();
-//            System.out.print(vid + "  ");}
         List<Integer> similarIds = new ArrayList<>();
         for (Map.Entry<Integer, Double> map : processedSimilarity) {
             similarIds.add(map.getKey());
         }
-//        System.out.println(similarIds);
         return similarIds;
     }
 

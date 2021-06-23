@@ -19,5 +19,7 @@ public interface AdUserService {
     public ResType getAd7DaysCostByAdUserId(Integer id);
     public ResType getAdBuserTabWeights(Integer id);
     public ResType getAdUserAllInfoByIds(List<Integer> ids);
+    public ResType updateMoney(Double money,Integer adId);
+    public ResType addThrow(String type, Double money, Integer buId, Integer adId, Integer bookId);
 
 }

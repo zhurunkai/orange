@@ -12,4 +12,6 @@ public interface BookUserService {
     public ResType chooseTags(int id,Map param);
     public ResType findTabWeightByBuid(int id);
     public ResType findTabById(Integer id);
+    public ResType getRecommendAd(Integer id,Integer bookId);
+    public ResType clickAd(Integer id,Integer bookId,Integer adId);
 }

@@ -87,6 +87,34 @@ public class BookUserController {
         return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
     }
 
+    // 用户获取一条广告
+    @GetMapping("/book/{bookId}/user/{uid}/ad")
+    public ResponseEntity<?> getRecommendAd(@RequestHeader("Authorization") String token,@PathVariable String uid,@PathVariable String bookId) {
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        ResType res = bookUserService.getRecommendAd(Integer.parseInt(uid),Integer.parseInt(bookId));
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
+
+    @PostMapping("/book/{bookId}/user/{uid}/ad/{adId}")
+    public ResponseEntity<?> clickAd(@RequestHeader("Authorization") String token,@PathVariable String uid,@PathVariable String bookId,@PathVariable String adId) {
+        System.out.println(1);
+        ResType tokenRes = commonUserService.checkToken(token);
+        if(tokenRes.getStatus()!=200) {
+            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
+        }
+        System.out.println(2);
+        ResType res = bookUserService.clickAd(Integer.parseInt(uid),Integer.parseInt(bookId),Integer.parseInt(adId));
+        if(res.getStatus()==200) {
+            return ResponseEntity.ok(res.getData());
+        }
+        return new ResponseEntity<Integer>(101, HttpStatus.valueOf(res.getStatus()));
+    }
 
 
 

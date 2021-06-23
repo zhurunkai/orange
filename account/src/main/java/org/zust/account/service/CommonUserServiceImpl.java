@@ -14,7 +14,7 @@ import org.zust.interfaceapi.service.CommonUserService;
 import org.zust.interfaceapi.utils.ResType;
 
 @Service
-@org.apache.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service(timeout = 300000)
 public class CommonUserServiceImpl implements CommonUserService {
     @Autowired
     private AdUserDao adUserDao;

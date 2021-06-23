@@ -6,6 +6,7 @@ import org.zust.interfaceapi.dto.BookDto;
 import org.zust.interfaceapi.dto.TabDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author: Linxy
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "book_tab")
-public class BookTag {
+public class BookTag  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
