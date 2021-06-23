@@ -46,6 +46,7 @@ public class AdUserServiceImpl implements AdUserService {
 
 
 
+
     @Override
     public ResType lrAdUser(Map param) {
         try {
@@ -53,7 +54,10 @@ public class AdUserServiceImpl implements AdUserService {
             String salt = (String) param.get("salt");
             String captcha = (String) param.get("captcha");
 
+            System.out.println(phone +"+"+ salt +"+"+captcha);
+
             SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
+            System.out.println(yanzheng);
 
             if(yanzheng != null){
                 AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
