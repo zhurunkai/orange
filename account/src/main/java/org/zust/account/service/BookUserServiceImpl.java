@@ -19,10 +19,7 @@ import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.dto.TabDto;
 import org.zust.interfaceapi.dto.TabWeightDto;
-import org.zust.interfaceapi.service.AdUserService;
-import org.zust.interfaceapi.service.BookUserService;
-import org.zust.interfaceapi.service.RecommendService;
-import org.zust.interfaceapi.service.TabService;
+import org.zust.interfaceapi.service.*;
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.*;
@@ -50,6 +47,9 @@ public class BookUserServiceImpl implements BookUserService {
 
     @Reference(check = false)
     private RecommendService recommendService;
+
+    @Reference(check = false)
+    private BookShelfService bookShelfService;
 
 
     //读者登录所用验证码
@@ -91,6 +91,13 @@ public class BookUserServiceImpl implements BookUserService {
 
                     BookUserEntity data = new BookUserEntity(phone, randomProfile, age, randomName, sex, token1);
                     BookUserEntity save = bookUserDao.save(data);
+
+                    HashMap<String, Object> Map = new HashMap<>();
+                    Map.put("name","默认书架");
+                    Map.put("owner",save.getId());
+
+
+                    bookShelfService.addBookShelf(Map);
 
                     return new ResType(e2d(save));
 
