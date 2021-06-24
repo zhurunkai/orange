@@ -151,11 +151,7 @@ public class AdUserController {
     }
 
     @GetMapping("/ad/{id}/throw/buser/tab")
-    public ResponseEntity<?> getAdBuserTabWeights(@RequestHeader("Authorization") String token, @PathVariable String id){
-        ResType tokenRes = commonUserService.checkToken(token);
-        if(tokenRes.getStatus()!=200) {
-            return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
-        }
+    public ResponseEntity<?> getAdBuserTabWeights(@PathVariable String id){
         ResType res = adUserService.getAdBuserTabWeights(Integer.parseInt(id));
         if(res.getStatus()==200) {
             return ResponseEntity.ok(res.getData());
