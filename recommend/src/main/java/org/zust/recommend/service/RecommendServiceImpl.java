@@ -19,6 +19,8 @@ public class RecommendServiceImpl implements RecommendService {
     private AdvertisementService advertisementService;
     @Reference(check = false)
     private BookChainService bookChainService;
+    @Reference(check = false)
+    private BookService bookService;
     // 基于用户选择的标签权重推荐书籍
     public ResType bookRecommendByTab(Integer id) {
         try {
@@ -107,23 +109,45 @@ public class RecommendServiceImpl implements RecommendService {
         List<BookId2BuserIdDto> bookId2BuserIdDtos = dimensionReduction2CF(bookChainDtos);
         // 获得键值map
         HashMap<Integer,List<Integer>> key2ValueCollection = getKey2ValueCollection(bookId2BuserIdDtos,"user");
-        // 获得相似id
-        List<Integer> similarIds = calcSimilarity(key2ValueCollection,"user",id,3);
-        // 创建推荐书籍列表，根据相似用户id，合并用户书籍列表
-        List<Integer> similarBooks = new ArrayList<>();
-        for (Integer similarId : similarIds) {
-            similarBooks.addAll(key2ValueCollection.get(similarId));
-        }
-        // 推荐书籍去重
-        Set<Integer> similarBooksToSet = new LinkedHashSet<>(similarBooks);
-        List<Integer> similarBooksToSetToList = new ArrayList<>(similarBooksToSet);
-        // 去除该用户自己已有书籍
-        for (int i = similarBooksToSetToList.size()-1; i>=0; i--) {
-            if(key2ValueCollection.get(id).contains(similarBooksToSetToList.get(i))) {
-                similarBooksToSetToList.remove(i);
+        System.out.println(key2ValueCollection);
+        if(key2ValueCollection.containsKey(id)) {
+            if(key2ValueCollection.get(id).size()>3) {
+                // 获得相似id
+                List<Integer> similarIds = calcSimilarity(key2ValueCollection,"user",id,3);
+                // 创建推荐书籍列表，根据相似用户id，合并用户书籍列表
+                List<Integer> similarBooks = new ArrayList<>();
+                for (Integer similarId : similarIds) {
+                    similarBooks.addAll(key2ValueCollection.get(similarId));
+                }
+                // 推荐书籍去重
+                Set<Integer> similarBooksToSet = new LinkedHashSet<>(similarBooks);
+                List<Integer> similarBooksToSetToList = new ArrayList<>(similarBooksToSet);
+                // 去除该用户自己已有书籍
+                for (int i = similarBooksToSetToList.size()-1; i>=0; i--) {
+                    if(key2ValueCollection.get(id).contains(similarBooksToSetToList.get(i))) {
+                        similarBooksToSetToList.remove(i);
+                    }
+                }
+                System.out.println(similarBooksToSetToList);
+                ResType res = bookService.bookIdsToBookDtos(similarBooksToSetToList);
+                if(res.getStatus()!=200) {
+                    return res;
+                }
+                List<BookDto> bookDtos = (List<BookDto>) (res.getData());
+                if(bookDtos.size()>10) {
+                    return new ResType(bookDtos.subList(0,9));
+                }
+                return new ResType(bookDtos);
             }
         }
-        return new ResType(similarBooksToSetToList);
+        // 跳转到5-15的书
+        ResType getBookIdByMostAddRes = bookService.getBookIdByMostAdd(15);
+        if(getBookIdByMostAddRes.getStatus()!=200) {
+            return getBookIdByMostAddRes;
+        }
+        List<BookDto> bookDtos = (List<BookDto>) (getAllBookChainDtosRes.getData());
+        System.out.println(bookDtos);
+        return new ResType(bookDtos.subList(5,14));
     }
 
     public ResType itemBasedCF(Integer id) {
@@ -146,7 +170,7 @@ public class RecommendServiceImpl implements RecommendService {
         if(key2ValueCollection.containsKey(id)) {
             if(key2ValueCollection.get(id).size()>3) {
                 List<Integer> similarIds = calcSimilarity(key2ValueCollection,"item",id,3);
-                return new ResType(similarIds);
+                return bookService.bookIdsToBookDtos(similarIds);
             }
         }
         // 跳转到标签算法

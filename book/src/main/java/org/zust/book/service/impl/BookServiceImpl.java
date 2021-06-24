@@ -260,12 +260,8 @@ public class BookServiceImpl implements BookService {
     public ResType recommendByUser(Integer userId) {
 
         ResType resType = recommendService.userBasedCF(userId);
-        List<Integer> data = (List<Integer>) resType.getData();
-        if (data.size()>=10){
-            data.subList(0,9);
-        }
 
-        return findBookDtobyIds(data);
+        return resType;
     }
 
     @Override

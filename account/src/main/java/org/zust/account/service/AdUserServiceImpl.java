@@ -27,7 +27,7 @@ import java.util.*;
 @Service
 @org.apache.dubbo.config.annotation.Service
 public class AdUserServiceImpl implements AdUserService {
-    
+
     @Reference(check = false)
     private AdvertisementService advertisementService;
 
@@ -45,8 +45,6 @@ public class AdUserServiceImpl implements AdUserService {
     private SaltDao saltDao;
 
 
-
-
     @Override
     public ResType lrAdUser(Map param) {
         try {
@@ -54,12 +52,12 @@ public class AdUserServiceImpl implements AdUserService {
             String salt = (String) param.get("salt");
             String captcha = (String) param.get("captcha");
 
-            System.out.println(phone +"+"+ salt +"+"+captcha);
+            System.out.println(phone + "+" + salt + "+" + captcha);
 
             SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
             System.out.println(yanzheng);
 
-            if(yanzheng != null){
+            if (yanzheng != null) {
                 AdUserEntity adUserEntity = adUserDao.findByPhone(phone);
                 if (adUserEntity == null) {
                     Double money = 10000.00;
@@ -82,8 +80,8 @@ public class AdUserServiceImpl implements AdUserService {
                     AdUserEntity save = adUserDao.save(data);
                     return new ResType(e2d(adUserEntity1));
                 }
-            }else{
-                return new ResType(500,111);
+            } else {
+                return new ResType(500, 111);
             }
 
 
@@ -112,7 +110,7 @@ public class AdUserServiceImpl implements AdUserService {
 
             ResType adsByAuId = findAdsByAuId(id);
             List<AdvertisementDto> ad = (List<AdvertisementDto>) adsByAuId.getData();
-            List<Integer> adid =new ArrayList<>();
+            List<Integer> adid = new ArrayList<>();
             for (AdvertisementDto advertisementDto : ad) {
                 Integer i = advertisementDto.getId();
                 adid.add(i);
@@ -129,13 +127,13 @@ public class AdUserServiceImpl implements AdUserService {
             }
             List<BookDto> bookDtos = new ArrayList<>();
             for (Integer bid : bids) {
-                HashMap<String,Object> map = new HashMap<>();
-                map.put("id",String.valueOf(bid));
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("id", String.valueOf(bid));
                 bookDtos.add((BookDto) (bookService.getBook(map).getData()));
             }
             ResType adRes = advertisementService.getAdByIds(adids);
-            if(adRes.getStatus()!=200) {
-                return new ResType(500,108);
+            if (adRes.getStatus() != 200) {
+                return new ResType(500, 108);
             }
             List<AdvertisementDto> advertisementDtos = (List<AdvertisementDto>) advertisementService.getAdByIds(adids).getData();
 //            System.out.println(advertisementDtos);
@@ -225,17 +223,17 @@ public class AdUserServiceImpl implements AdUserService {
 
     @Override
     public ResType findAdsByAuId(int id) {
-        try{
+        try {
 
-         ResType ad = advertisementService.getAdvertisementByAdUser(id);
-         if(ad.getStatus()==200) {
-             return new ResType(ad.getData());
-         }
-         return new ResType(500,101);
+            ResType ad = advertisementService.getAdvertisementByAdUser(id);
+            if (ad.getStatus() == 200) {
+                return new ResType(ad.getData());
+            }
+            return new ResType(500, 101);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
 
 
@@ -351,40 +349,40 @@ public class AdUserServiceImpl implements AdUserService {
     // 获取某位广告主所有广告投放到的读书人的标签权重和
     public ResType getAdBuserTabWeights(Integer id) {
         try {
-            Map<String,Integer> weightMap = new HashMap<>();
+            Map<String, Integer> weightMap = new HashMap<>();
             List<ThrowRecordsEntity> throwRecordsEntities = throwRecordsDao.findThrowByAd(id);
             for (ThrowRecordsEntity throwRecordsEntity : throwRecordsEntities) {
-                ResType res = calcBuserWeight(id,weightMap);
-                if(res.getStatus()==200) {
+                ResType res = calcBuserWeight(id, weightMap);
+                if (res.getStatus() == 200) {
                     weightMap = (Map<String, Integer>) res.getData();
                 }
             }
             return new ResType(weightMap);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
 
-    private ResType calcBuserWeight(Integer buserId,Map<String,Integer> map) {
+    private ResType calcBuserWeight(Integer buserId, Map<String, Integer> map) {
         ResType findRes = bookUserService.findTabWeightByBuid(buserId);
-        if(findRes.getStatus()==200) {
+        if (findRes.getStatus() == 200) {
             List<TabWeightDto> tabWeightDtos = (List<TabWeightDto>) findRes.getData();
             for (TabWeightDto tabWeightDto : tabWeightDtos) {
-                if(map.keySet().contains(tabWeightDto.getTab().getName())) {
-                    map.put(tabWeightDto.getTab().getName(),map.get(tabWeightDto.getTab().getName())+tabWeightDto.getWeight());
+                if (map.keySet().contains(tabWeightDto.getTab().getName())) {
+                    map.put(tabWeightDto.getTab().getName(), map.get(tabWeightDto.getTab().getName()) + tabWeightDto.getWeight());
                 } else {
-                    map.put(tabWeightDto.getTab().getName(),tabWeightDto.getWeight());
+                    map.put(tabWeightDto.getTab().getName(), tabWeightDto.getWeight());
                 }
             }
             return new ResType(map);
         }
-        return new ResType(500,108);
+        return new ResType(500, 108);
     }
 
     public ResType getAdUserAllInfoByIds(List<Integer> ids) {
         try {
-            List<AdUserEntity> adUserEntities =  adUserDao.findAllByIds(ids);
+            List<AdUserEntity> adUserEntities = adUserDao.findAllByIds(ids);
             List<AdUserDto> adUserDtos = new ArrayList<>();
             for (AdUserEntity adUserEntity : adUserEntities) {
                 adUserDtos.add(e2d(adUserEntity));
@@ -392,7 +390,7 @@ public class AdUserServiceImpl implements AdUserService {
             return new ResType(adUserDtos);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,101);
+            return new ResType(500, 101);
         }
     }
 
@@ -400,26 +398,37 @@ public class AdUserServiceImpl implements AdUserService {
     public ResType updateMoney(Double money, Integer adId) {
         try {
             AdUserEntity adUserEntity = adUserDao.findOneById(adId);
-            adUserEntity.setFreeze(adUserEntity.getFreeze()-money);
+            adUserEntity.setFreeze(adUserEntity.getFreeze() - money);
             adUserDao.save(adUserEntity);
             return new ResType(adUserEntity);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,108);
+            return new ResType(500, 108);
         }
     }
 
     @Override
     public ResType addThrow(String type, Double money, Integer buId, Integer adId, Integer bookId) {
         try {
-            ThrowRecordsEntity throwRecordsEntity = new ThrowRecordsEntity(type,new Date(),money,bookId,adId,buId);
+            ThrowRecordsEntity throwRecordsEntity = new ThrowRecordsEntity(type, new Date(), money, bookId, adId, buId);
             ThrowRecordsEntity throwRecordsEntity1 = throwRecordsDao.save(throwRecordsEntity);
             return new ResType(throwRecordsEntity1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500, 108);
+        }
+    }
+
+    public ResType cost(Double cost,Integer uid) {
+        try {
+            AdUserEntity adUserEntity = adUserDao.findOneById(uid);
+            adUserEntity.setFreeze(adUserEntity.getFreeze()+cost);
+            adUserEntity.setMoney(adUserEntity.getMoney()-cost);
+            return new ResType(adUserDao.save(adUserEntity));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(500,108);
         }
     }
-
 
 }

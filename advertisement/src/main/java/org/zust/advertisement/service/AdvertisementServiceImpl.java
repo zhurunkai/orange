@@ -12,6 +12,11 @@ import org.zust.interfaceapi.dto.AdUserDto;
 import org.zust.interfaceapi.dto.AdvertisementDto;
 import org.zust.interfaceapi.service.AdUserService;
 import org.zust.interfaceapi.service.AdvertisementService;
+<<<<<<< HEAD
+=======
+import org.zust.interfaceapi.dto.AdvertisementDto;
+import org.zust.interfaceapi.service.TabService;
+>>>>>>> 2383fedd687d01ec3db18424145f8d1869c329aa
 import org.zust.interfaceapi.utils.ResType;
 
 import java.util.ArrayList;
@@ -28,6 +33,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     AdTabDao adTabDao;
 
     @Reference(check = false)
+    TabService tabService;
+
+    @Reference(check = false)
     private AdUserService adUserService;
 
     @Override
@@ -35,16 +43,31 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         String title = null;
         String url = null;
         String picture = null;
+        Double budget = 0.0;
+        List<String> tabs = new ArrayList<>();
         try {
             title = (String)params.get("title");
             url = (String)params.get("url");
             picture = (String)params.get("picture");
+            budget = new Double((String)params.get("budget"));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResType(400,104);
         }
         try {
-            AdvertisementEntity advertisementEntity = advertisementDao.save(new AdvertisementEntity(title,url,picture,1, 10000.0,"正在投放"));
+            AdvertisementEntity advertisementEntity = advertisementDao.save(new AdvertisementEntity(title,url,picture,((AdUserDto)params.get("user")).getId(), budget,"正在投放"));
+            ResType res1 = adUserService.cost(budget,((AdUserDto)params.get("user")).getId());
+            if(res1.getStatus()!=200) {
+                return res1;
+            }
+            ResType res = tabService.findTagIdByName(params);
+            if(res.getStatus()!=200) {
+                return res;
+            }
+            List<Integer> tabIds = (List<Integer>) (res.getData());
+            for (Integer tabId : tabIds) {
+                adTabDao.save(new AdTabEntity(tabId,advertisementEntity.getId()));
+            }
             return new ResType(e2d(advertisementEntity));
         } catch (Exception e) {
             e.printStackTrace();
