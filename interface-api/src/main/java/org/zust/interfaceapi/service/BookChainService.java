@@ -18,5 +18,6 @@ public interface BookChainService {
     ResType addReaderAccord(HashMap map);
     ResType getAllChain(HashMap map);
     ResType CollectChain(HashMap map);
+    public ResType getAllChains();
 
 }

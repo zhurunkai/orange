@@ -140,8 +140,11 @@ public class BookController {
         if(tokenRes.getStatus()!=200) {
             return ResponseEntity.status(tokenRes.getStatus()).body(tokenRes.getCode());
         }
-
+        System.out.println("tokenres");
+        System.out.println(tokenRes);
         BookUserDto buser = (BookUserDto) tokenRes.getData();
+        System.out.println("bookservice");
+        System.out.println(bookService);
         ResType res = bookService.recommendByItem(buser.getId());
 
         if(res.getStatus()==200) {

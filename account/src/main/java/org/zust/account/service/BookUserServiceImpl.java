@@ -15,10 +15,7 @@ import org.zust.account.entity.TabWeightEntity;
 import org.zust.account.utils.IdentifyingCode;
 import org.zust.account.utils.RandomName;
 import org.zust.account.utils.RandomProfile;
-import org.zust.interfaceapi.dto.AdvertisementDto;
-import org.zust.interfaceapi.dto.BookUserDto;
-import org.zust.interfaceapi.dto.TabDto;
-import org.zust.interfaceapi.dto.TabWeightDto;
+import org.zust.interfaceapi.dto.*;
 import org.zust.interfaceapi.service.*;
 import org.zust.interfaceapi.utils.ResType;
 
@@ -51,6 +48,9 @@ public class BookUserServiceImpl implements BookUserService {
     @Reference(check = false)
     private BookShelfService bookShelfService;
 
+    @Reference(check = false)
+    private BookService bookService;
+
 
     //读者登录所用验证码
     @Override
@@ -79,7 +79,7 @@ public class BookUserServiceImpl implements BookUserService {
 
             SaltEntity yanzheng = saltDao.findOneBy(phone, salt, captcha);
             System.out.println(yanzheng);
-            if(yanzheng != null){
+            if (yanzheng != null) {
 
                 BookUserEntity bookUserEntity = bookUserDao.findByPhone(phone);
                 if (bookUserEntity == null) {
@@ -93,8 +93,8 @@ public class BookUserServiceImpl implements BookUserService {
                     BookUserEntity save = bookUserDao.save(data);
 
                     HashMap<String, Object> Map = new HashMap<>();
-                    Map.put("name","默认书架");
-                    Map.put("owner",save.getId());
+                    Map.put("name", "默认书架");
+                    Map.put("owner", save.getId());
 
 
                     bookShelfService.addBookShelf(Map);
@@ -109,9 +109,9 @@ public class BookUserServiceImpl implements BookUserService {
                     BookUserEntity data = bookUserEntity1;
                     BookUserEntity save = bookUserDao.save(data);
                     return new ResType(e2d(bookUserEntity1));
-                 }
-            }else{
-                return new ResType(500,111);
+                }
+            } else {
+                return new ResType(500, 111);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class BookUserServiceImpl implements BookUserService {
             }
             List<TabEntity> tabEntities = tabDao.findAllByIds(tabIds);
             for (TabEntity tabEntity : tabEntities) {
-                map.put(tabEntity.getId(),tabEntity.getName());
+                map.put(tabEntity.getId(), tabEntity.getName());
             }
             return new ResType(map);
         } catch (Exception e) {
@@ -157,14 +157,14 @@ public class BookUserServiceImpl implements BookUserService {
     }
 
     @Override
-    public ResType chooseTags(int id,Map param) {
-        try{
-            ResType tag =tabService.findTagIdByName(param);
+    public ResType chooseTags(int id, Map param) {
+        try {
+            ResType tag = tabService.findTagIdByName(param);
             ArrayList data = (ArrayList) tag.getData();
-            ArrayList allData =new ArrayList();
+            ArrayList allData = new ArrayList();
             for (Object datum : data) {
-                Integer weight =100;
-                TabWeightEntity tabWeightEntity = new TabWeightEntity(id, (Integer) datum,weight);
+                Integer weight = 100;
+                TabWeightEntity tabWeightEntity = new TabWeightEntity(id, (Integer) datum, weight);
 //                System.out.println(tabWeightEntity);
                 TabWeightEntity save = tabWeightDao.save(tabWeightEntity);
 //                System.out.println(save);
@@ -183,9 +183,9 @@ public class BookUserServiceImpl implements BookUserService {
             }
 //            System.out.println(allData);
             return new ResType(allData);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return  new ResType(500,103);
+            return new ResType(500, 103);
         }
 
     }
@@ -241,35 +241,107 @@ public class BookUserServiceImpl implements BookUserService {
     }
 
     @Override
-    public ResType getRecommendAd(Integer id,Integer bookId) {
+    public ResType getRecommendAd(Integer id, Integer bookId) {
         try {
             ResType res = recommendService.adRecommendByUserTab(id);
-            if(res.getStatus()!=200) {
+            if (res.getStatus() != 200) {
                 return res;
             }
-            ResType res1 = adUserService.updateMoney(0.1,((AdvertisementDto)res.getData()).getOwner().getId());
-            ResType res2 = adUserService.addThrow("查看",0.1,id,((AdvertisementDto)res.getData()).getId(),bookId);
-            if(res1.getStatus()==200&&res2.getStatus()==200) {
+            ResType res1 = adUserService.updateMoney(0.1, ((AdvertisementDto) res.getData()).getOwner().getId());
+            ResType res2 = adUserService.addThrow("查看", 0.1, id, ((AdvertisementDto) res.getData()).getId(), bookId);
+            if (res1.getStatus() == 200 && res2.getStatus() == 200) {
                 return res;
             }
-            return new ResType(500,108);
+            return new ResType(500, 108);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,108);
+            return new ResType(500, 108);
         }
     }
 
     @Override
-    public ResType clickAd(Integer id,Integer bookId,Integer adId) {
+    public ResType clickAd(Integer id, Integer bookId, Integer adId) {
         try {
-            ResType res2 = adUserService.addThrow("点击",1.0,id,adId,bookId);
-            if(res2.getStatus()==200) {
+            ResType res2 = adUserService.addThrow("点击", 1.0, id, adId, bookId);
+            if (res2.getStatus() == 200) {
                 return res2;
             }
-            return new ResType(500,108);
+            return new ResType(500, 108);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResType(500,108);
+            return new ResType(500, 108);
+        }
+    }
+
+    public ResType getBookRecommendByTab(Integer id) {
+        try {
+            List<TabWeightEntity> tabWeightEntities = tabWeightDao.findAllByUser(id);
+            if (tabWeightEntities.size() == 0) {
+                // 返回1-5本最多的书
+            }
+            // 如果他少于3个大于50的标签
+            Collections.sort(tabWeightEntities, new Comparator<TabWeightEntity>() {
+                @Override
+                public int compare(TabWeightEntity user1, TabWeightEntity user2) {
+                    Integer id1 = user1.getWeight();
+                    Integer id2 = user2.getWeight();
+                    //可以按User对象的其他属性排序，只要属性支持compareTo方法
+                    return id2.compareTo(id1);
+                }
+            });
+            //
+            int count = 0;
+            for (int i = 0; i < tabWeightEntities.size(); i++) {
+                if (tabWeightEntities.get(i).getWeight() > 50) {
+                    count++;
+                }
+            }
+            // 获取1-5的书
+            ResType bookIdByMostAddRes = bookService.getBookIdByMostAdd(5);
+            if (bookIdByMostAddRes.getStatus() != 200) {
+                return bookIdByMostAddRes;
+            }
+            List<Integer> book1to5 = (List<Integer>) (bookIdByMostAddRes.getData());
+            if (count < 3) {
+                // 直接推荐1-5的书并返回
+                ResType bookDto1to5Res = bookService.bookIdsToBookDtos(book1to5);
+                if (bookDto1to5Res.getStatus() != 200) {
+                    return bookDto1to5Res;
+                }
+                List<BookDto> bookDtos = (List<BookDto>) (bookDto1to5Res.getData());
+                return new ResType(bookDtos);
+            }
+            List<Integer> tabIds = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                tabIds.add(tabWeightEntities.get(j).getTab());
+            }
+            // 把tabIds传过去获得书的ids
+            ResType getBookIdsByTabIdsRes = bookService.getBookIdsByTabIds(tabIds);
+            if (getBookIdsByTabIdsRes.getStatus() != 200) {
+                return new ResType(500, 108);
+            }
+            List<Integer> bookIdsByTabIds = (List<Integer>) (getBookIdsByTabIdsRes.getData());
+            if (bookIdsByTabIds.size() > 5) {
+                List<Integer> finalBookIdsBeyond5 = bookIdsByTabIds.subList(0, 4);
+                ResType finalBookIdsBeyond5Res = bookService.bookIdsToBookDtos(finalBookIdsBeyond5);
+
+                return finalBookIdsBeyond5Res;
+
+            }
+            int index = 0;
+            while (bookIdsByTabIds.size() < 5) {
+                if (!bookIdsByTabIds.contains(book1to5.get(index))) {
+                    bookIdsByTabIds.add(book1to5.get(index));
+                }
+                index++;
+            }
+            ResType finalBookIdsByTabsRes = bookService.bookIdsToBookDtos(bookIdsByTabIds);
+
+            return finalBookIdsByTabsRes;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500, 108);
         }
     }
 }

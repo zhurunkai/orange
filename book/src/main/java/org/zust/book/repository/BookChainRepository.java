@@ -26,4 +26,7 @@ public interface BookChainRepository extends JpaRepository<BookChain,Integer> {
     @Query("from BookChain bc where bc.alive=1 and bc.shelf=?1")
     List<BookChain> findAllByShelf(Integer bsid);
 
+    // 获得1-?条最多收藏的书
+    @Query(nativeQuery = true,value = "select origin from book_chain GROUP BY origin ORDER BY count(origin) DESC LIMIT ?1")
+    List<Integer> getMostAddBookIds(Integer nums);
 }

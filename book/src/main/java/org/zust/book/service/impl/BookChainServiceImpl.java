@@ -8,6 +8,7 @@ import org.zust.book.entity.*;
 import org.zust.book.repository.*;
 import org.zust.interfaceapi.dto.BookChainDto;
 import org.zust.interfaceapi.dto.BookDto;
+import org.zust.interfaceapi.dto.BookEnDto;
 import org.zust.interfaceapi.dto.BookUserDto;
 import org.zust.interfaceapi.service.BookChainService;
 import org.zust.interfaceapi.service.BookUserService;
@@ -294,6 +295,21 @@ public class BookChainServiceImpl implements BookChainService {
             }
         }
         return new ResType(returnList);
+    }
+
+    public ResType getAllChains() {
+        try {
+            List<BookChain> bookChains = chainRepository.findAll();
+            List<BookEnDto> bookChainDtos = new ArrayList<>();
+            for (BookChain bookChain : bookChains) {
+
+                bookChainDtos.add(new BookEnDto(bookChain.getId(),bookChain.getOwner()));
+            }
+            return new ResType(bookChainDtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
     }
 
     public BookDto e2d(Book book) {

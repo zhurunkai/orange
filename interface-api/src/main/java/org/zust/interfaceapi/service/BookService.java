@@ -24,4 +24,7 @@ public interface BookService {
     public ResType recommendByUser(Integer userId);
 
     public ResType recommendByItem(Integer userId);
+    public ResType getBookIdsByTabIds(List<Integer> tabIds);
+    public ResType getBookIdByMostAdd(Integer num);
+    public ResType bookIdsToBookDtos(List<Integer> bookIds);
 }

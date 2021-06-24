@@ -14,4 +14,5 @@ public interface BookUserService {
     public ResType findTabById(Integer id);
     public ResType getRecommendAd(Integer id,Integer bookId);
     public ResType clickAd(Integer id,Integer bookId,Integer adId);
+    public ResType getBookRecommendByTab(Integer id);
 }

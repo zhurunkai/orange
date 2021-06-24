@@ -6,4 +6,5 @@ public interface RecommendService {
     public ResType userBasedCF(Integer id);
     public ResType itemBasedCF(Integer id);
     public ResType adRecommendByUserTab(Integer id);
+    public ResType bookRecommendByTab(Integer id);
 }

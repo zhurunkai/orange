@@ -270,14 +270,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResType recommendByItem(Integer userId) {
-
+        System.out.println("recommentserveice");
+        System.out.println(recommendService);
         ResType resType = recommendService.itemBasedCF(userId);
-        List<Integer> data = (List<Integer>) resType.getData();
-        if (data.size()>=5){
-            data.subList(0,4);
-        }
+        System.out.println("restype");
+        System.out.println(resType);
 
-        return findBookDtobyIds(data);
+
+        return resType;
     }
 
     public BookDto e2d(Book book) {
@@ -297,4 +297,45 @@ public class BookServiceImpl implements BookService {
         return chainDto;
     }
 
+
+    public ResType getBookIdsByTabIds(List<Integer> tabIds) {
+        try {
+            List<Integer> bookIds = bookTagRepository.getBookIdsByTabIds(tabIds);
+//            根据bookids拿到bookentitys
+            return new ResType(bookIds);
+//            List<Book> bookEns = bookRepository.findAllByIds(bookIds);
+//            List<BookDto> bookDtos = new ArrayList<>();
+//            for (Book bookEn : bookEns) {
+//                bookDtos.add(e2d(bookEn));
+//            }
+//            return
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
+
+    public ResType getBookIdByMostAdd(Integer num) {
+        try {
+            List<Integer> ids = chainRepository.getMostAddBookIds(num);
+            return new ResType(ids);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
+
+    public ResType bookIdsToBookDtos(List<Integer> bookIds) {
+        try {
+            List<Book> books = bookRepository.findAllByIds(bookIds);
+            List<BookDto> bookDtos = new ArrayList<>();
+            for (Book book : books) {
+                bookDtos.add(e2d(book));
+            }
+            return new ResType(bookDtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
 }

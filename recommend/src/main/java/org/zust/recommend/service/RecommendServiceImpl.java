@@ -4,10 +4,7 @@ import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.zust.interfaceapi.dto.*;
-import org.zust.interfaceapi.service.AdUserService;
-import org.zust.interfaceapi.service.AdvertisementService;
-import org.zust.interfaceapi.service.BookUserService;
-import org.zust.interfaceapi.service.RecommendService;
+import org.zust.interfaceapi.service.*;
 import org.zust.interfaceapi.utils.ResType;
 import org.zust.recommend.dto.BookId2BuserIdDto;
 
@@ -20,8 +17,21 @@ public class RecommendServiceImpl implements RecommendService {
     private BookUserService bookUserService;
     @Reference(check = false)
     private AdvertisementService advertisementService;
+    @Reference(check = false)
+    private BookChainService bookChainService;
+    // 基于用户选择的标签权重推荐书籍
+    public ResType bookRecommendByTab(Integer id) {
+        try {
+            ResType getBookRecommendByTabRes = bookUserService.getBookRecommendByTab(id);
+            return getBookRecommendByTabRes;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
+    }
 
-    // 通过读书人id根据用户标签推荐投放的广告
+
+    // 通过读书人id根据用户标签推荐投放广告
     public ResType adRecommendByUserTab(Integer id) {
         try {
             // 根据id获得用户标签权重信息
@@ -87,8 +97,12 @@ public class RecommendServiceImpl implements RecommendService {
 
     // 基于用户的协同过滤算法
     public ResType userBasedCF(Integer id) {
-//        获取所有的chain
-        List<BookChainDto> bookChainDtos = 获得假数据();
+        // 获取所有的chain
+        ResType getAllBookChainDtosRes = getAllBookChainDtos();
+        if(getAllBookChainDtosRes.getStatus()!=200) {
+            return getAllBookChainDtosRes;
+        }
+        List<BookEnDto> bookChainDtos = (List<BookEnDto>) (getAllBookChainDtos().getData());
         // 对初始chain集合进行降维，获得BookId2BuserIDto
         List<BookId2BuserIdDto> bookId2BuserIdDtos = dimensionReduction2CF(bookChainDtos);
         // 获得键值map
@@ -114,14 +128,30 @@ public class RecommendServiceImpl implements RecommendService {
 
     public ResType itemBasedCF(Integer id) {
         // 获取所有的chain
-        List<BookChainDto> bookChainDtos = 获得假数据();
+        ResType getAllBookChainDtosRes = getAllBookChainDtos();
+        if(getAllBookChainDtosRes.getStatus()!=200) {
+            return getAllBookChainDtosRes;
+        }
+        List<BookEnDto> bookChainDtos = (List<BookEnDto>) (getAllBookChainDtos().getData());
         // 对初始chain集合进行降维，获得BookId2BuserIDto
         List<BookId2BuserIdDto> bookId2BuserIdDtos = dimensionReduction2CF(bookChainDtos);
+        for (BookId2BuserIdDto bookId2BuserIdDto : bookId2BuserIdDtos) {
+            System.out.println(bookId2BuserIdDto);
+        }
         // 获得键值map
         HashMap<Integer,List<Integer>> key2ValueCollection = getKey2ValueCollection(bookId2BuserIdDtos,"item");
         // 获得相似id
-        List<Integer> similarIds = calcSimilarity(key2ValueCollection,"item",id,3);
-        return new ResType(similarIds);
+        System.out.println(key2ValueCollection);
+        // 检测传入的用户id是否在集合中
+        if(key2ValueCollection.containsKey(id)) {
+            if(key2ValueCollection.get(id).size()>3) {
+                List<Integer> similarIds = calcSimilarity(key2ValueCollection,"item",id,3);
+                return new ResType(similarIds);
+            }
+        }
+        // 跳转到标签算法
+        ResType bookRecommendByTabRes = bookRecommendByTab(id);
+        return bookRecommendByTabRes;
     }
     // 获得键值map
     public HashMap<Integer,List<Integer>> getKey2ValueCollection(List<BookId2BuserIdDto> bookId2BuserIdDtos, String type) {
@@ -149,7 +179,10 @@ public class RecommendServiceImpl implements RecommendService {
         // 首先定义一个相似度map，之后进行遍历
         HashMap<Integer,Double> similarityMap = new HashMap<>();
         // 填入key，value暂时都为0,除了自己为1
+        System.out.println(key2ValueCollection.keySet());
+        System.out.println(key2ValueCollection.keySet().size());
         for(Integer key : key2ValueCollection.keySet()){
+            System.out.println(id);
             if(!id.equals(key))  {
                 // 当前buser的书数量
                 int currentIdValues = key2ValueCollection.get(id).size();
@@ -184,10 +217,10 @@ public class RecommendServiceImpl implements RecommendService {
     }
 
     // 将BookChain集合降维为BookId2BuserId集合
-    public List<BookId2BuserIdDto> dimensionReduction2CF(List<BookChainDto> bookChainDtos) {
+    public List<BookId2BuserIdDto> dimensionReduction2CF(List<BookEnDto> bookChainDtos) {
         List<BookId2BuserIdDto> bookId2BuserIdDtos = new ArrayList<>();
-        for (BookChainDto bookChainDto : bookChainDtos) {
-            bookId2BuserIdDtos.add(new BookId2BuserIdDto(bookChainDto.getOrigin().getId(),bookChainDto.getOwner().getId()));
+        for (BookEnDto bookChainDto : bookChainDtos) {
+            bookId2BuserIdDtos.add(new BookId2BuserIdDto(bookChainDto.getId(),bookChainDto.getOwner()));
         }
 //        for (BookId2BuserIdDto bookId2BuserIdDto : bookId2BuserIdDtos) {
 //            System.out.println(bookId2BuserIdDto);
@@ -221,5 +254,15 @@ public class RecommendServiceImpl implements RecommendService {
         lists.add(new BookChainDto(22,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(2,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
         lists.add(new BookChainDto(23,"林炫宇天王","nih",new BookShelfDto(11,"默认",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),0),new BookUserDto(6,"213","21",12,"dfa","男","jkfdak"),20,1,new BookDto(5,"Dfa",new BookUserDto(1,"213","21",12,"dfa","男","jkfdak"),"dfas","daf",1,"dfas","dfa")));
     return lists;
+    }
+
+    public ResType getAllBookChainDtos() {
+        try {
+            ResType res = bookChainService.getAllChains();
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResType(500,108);
+        }
     }
 }
