@@ -21,4 +21,9 @@ public class AdTabEntity  implements Serializable {
     //广告id
     @Column
     private Integer advertisement;
+
+    public AdTabEntity(Integer tab, Integer advertisement) {
+        this.tab = tab;
+        this.advertisement = advertisement;
+    }
 }
